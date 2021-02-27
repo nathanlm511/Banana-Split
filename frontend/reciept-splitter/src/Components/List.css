@@ -83,37 +83,27 @@
     top: 0px;
     left: 0px;
     height: 100%;
-    background-image: url("../Images/yellow.jpeg");
     opacity: 0.4;
 }
 
-.other-highlight-0 {
+.other-highlight {
     position: absolute;
     top: 0px;
+    height: 100%;
+    opacity: 0.4;
+}
+
+.highlight-0 {
     background-image: url("../Images/red.jpg");
-    height: 100%;
-    opacity: 0.4;
 }
-.other-highlight-1 {
-    position: absolute;
-    top: 0px;
+.highlight-1 {
     background-image: url("../Images/green.jpg");
-    height: 100%;
-    opacity: 0.4;
 }
-.other-highlight-2 {
-    position: absolute;
-    top: 0px;
+.highlight-2 {
     background-image: url("../Images/blue.jpg");
-    height: 100%;
-    opacity: 0.4;
 }
-.other-highlight-3 {
-    position: absolute;
-    top: 0px;
+.highlight-3 {
     background-image: url("../Images/yellow.jpeg");
-    height: 100%;
-    opacity: 0.4;
 }
 
 input[type=range] {
@@ -169,6 +159,34 @@ input[type=range].slider::-webkit-slider-thumb {
 }
 */
 
+.legend-container {
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    height: 20%;
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
 
+.legend-whitespace {
+    height: 20%;
+}
 
+.user-container {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   justify-content: center;
+   height: 50%;
+   width: 25%
+}
 
+.circle {
+    height: 25px;
+    width: 25px;
+    border-radius: 100px;
+}

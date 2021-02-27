@@ -33,9 +33,40 @@ class Login extends Component {
       password: this.state.password})
       .then(res => {
         window.localStorage.setItem("token", JSON.stringify(res.data));
-        window.location = "/list"
+        /*
+        axios.post("http://localhost:5000/get_session")
+          .then(sessionData => {
+            // window.location = 
+          })
+          .catch(err => console.log(err));
+        */
+        let session_id = window.localStorage.getItem("session_id");
+        // {Name: "Sam", Items: [{Name: "Apple", ID: 1, price: 10, Percentage:}, {Name: "Bread", ID: 2, price: 15}]},
+        const session_data = {
+          name: "My Grocery List",
+          host: "Nathan", 
+          current_user: "",
+          //current_user: {name: "Sam", items: [{name: "Apple", id: 1, price: 10, percentage: 17}, {name: "Bread", id: 2, price: 15, percentage: 36}],
+            //            id: "7482", username: "Justv"},
+          users: [
+                  {name: "Justin", items: [{name: "Chai", id: 3, price: 8, percentage: 50}, {name: "Dates", id: 4, price: 6, percentage: 100}],
+                   id: "7482", username: "Justv"},
+                  {name: "Nathan", items: [{name: "Bread", id: 2, price: 15, percentage: 25}, {name: "Chai", id: 3, price: 8, percentage: 25}],
+                  id: "0260", username: "NatM"}],
+          items: [{name: "Apple", id: 1, price: 10},
+                  {name: "Bread", id: 2, price: 15},
+                  {name: "Chai", id: 3, price: 8},
+                  {name: "Dates", id: 4, price: 6}]
+        }
+
+        window.localStorage.setItem("session_data", JSON.stringify(session_data));
+        window.location = "/list";
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
+  }
+
+  componentDidMount() {
+    window.localStorage.setItem("session_id", window.location.href.split('\\').pop().split('/').pop());    
   }
 
   render() {
