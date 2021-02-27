@@ -1,5 +1,7 @@
-from flask
+import flask
+import json
 from venmo_api import Client
+import cv2
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -8,6 +10,7 @@ app.config["DEBUG"] = True
 host = None
 friends = []
 
+
 @app.route('/', methods=['GET'])
 def home():
     return "<h1>Distant Reading Archive</h1><p>This site is a prototype API for distant reading of science fiction novels.</p>"
@@ -15,8 +18,10 @@ def home():
 # When host starts session. Can be after taking and processing picture of receipt
 @app.route('/host_login/', methods=['POST'])
 def host_login():
-    venmo_user = str(flask.request.form.get('username', 0))
-    venmo_pass = str(flask.request.form.get('password', 0))
+    receive_json = json.loads(flask.request.json.get())
+    
+    venmo_user = receive_json["username"]
+    venmo_pass = receive_json["password"]
     
     try:
         access_token = Client.get_access_token(username=venmo_user, password=venmo_pass)
@@ -27,14 +32,24 @@ def host_login():
     host_venmo = Client(access_token=access_token)
     host = host_venmo.user.get_my_profile()
     
+    # Return jsonified data
+    return_data_dict = {"id": host.id, "username": host.username, "first_name": host.first_name,
+                        "last_name": host.last_name, "display_name": host.display_name, "phone": host.phone,
+                        "profile_picture_url": host.profile_picture_url, "about": host.about, 
+                        "date_joined": host.date_joined, "is_group": host.is_group, "is_active": host.is_active}
+    
+    return json.dumps(return_data_dict, indent=4)
+    
     
 @app.route('/host_login/', methods=['POST'])
 def friend_login():
-    username = str(flask.request.form.get('username', 0))
-    password = str(flask.request.form.get('password', 0))
+    receive_json = json.loads(flask.request.json.get())
+    
+    venmo_user = receive_json["username"]
+    venmo_pass = receive_json["password"]
     
     try:
-        access_token = Client.get_access_token(username=username, password=password)
+        access_token = Client.get_access_token(username=venmo_user, password=venmo_pass)
     except:
         print("username or password incorrect")
         
@@ -47,6 +62,14 @@ def friend_login():
         friends.append(new_friend)
     else:
         print("friend already here")
+    
+    # Return jsonified data
+    return_data_dict = {"id": new_friend.id, "username": new_friend.username, "first_name": new_friend.first_name,
+                        "last_name": new_friend.last_name, "display_name": new_friend.display_name, "phone": new_friend.phone,
+                        "profile_picture_url": new_friend.profile_picture_url, "about": new_friend.about, 
+                        "date_joined": new_friend.date_joined, "is_group": new_friend.is_group, "is_active": new_friend.is_active}
+    
+    return json.dumps(return_data_dict, indent=4)
 
 
 # After everyone has filled out their forms
