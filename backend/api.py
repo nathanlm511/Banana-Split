@@ -1,4 +1,4 @@
-import flask
+from flask import Flask, request, jsonify
 import json
 from venmo_api import Client
 import cv2
@@ -8,6 +8,11 @@ app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 db = client.db
 sessions = db['sessions']
+from flask_cors import CORS, cross_origin
+
+app = Flask(__name__)
+CORS(app, supports_credentials=True)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Venmo Users
 host = None
@@ -19,17 +24,22 @@ def home():
     return "<h1>Distant Reading Archive</h1><p>This site is a prototype API for distant reading of science fiction novels.</p>"
 
 # When host starts session. Can be after taking and processing picture of receipt
-@app.route('/host_login/', methods=['POST'])
+@app.route('/host_login', methods=['POST'])
 def host_login():
-    receive_json = json.loads(flask.request.json.get())
-    
-    venmo_user = receive_json["username"]
-    venmo_pass = receive_json["password"]
-    
+    '''
+    venmo_user = request.json["username"]
+    venmo_pass = request.json["password"]
+
     try:
         access_token = Client.get_access_token(username=venmo_user, password=venmo_pass)
     except:
         print("username or password incorrect")
+        response = app.response_class(
+            response="username or password incorrect",
+            mimetype='application/json',
+            status=413
+        )
+        return response
         
     # Make venmo User object for host
     host_venmo = Client(access_token=access_token)
@@ -40,13 +50,21 @@ def host_login():
                         "last_name": host.last_name, "display_name": host.display_name, "phone": host.phone,
                         "profile_picture_url": host.profile_picture_url, "about": host.about, 
                         "date_joined": host.date_joined, "is_group": host.is_group, "is_active": host.is_active}
+    '''   
     
-    return json.dumps(return_data_dict, indent=4)
-    
-    
-@app.route('/host_login/', methods=['POST'])
+    # Return jsonified data
+    return_data_dict = {"id": "1234", "username": "my_username", "first_name": "first",
+                        "last_name": "last", "display_name": "First last", "phone": "123-456-1234",
+                        "profile_picture_url": "google.com", "about": "about me", 
+                        "date_joined": "date_joined", "is_group": True, "is_active": True}
+
+    response = json.dumps(return_data_dict)
+
+    return response
+
+@app.route('/friend_login', methods=['POST'])
 def friend_login():
-    receive_json = json.loads(flask.request.json.get())
+    receive_json = json.loads(request.json.get())
     
     venmo_user = receive_json["username"]
     venmo_pass = receive_json["password"]
@@ -76,7 +94,7 @@ def friend_login():
 
 
 # After everyone has filled out their forms
-@app.route('/host_confirm_request/', methods=['POST'])
+@app.route('/host_confirm_request', methods=['POST'])
 def host_confirm_request():
     pass
 
