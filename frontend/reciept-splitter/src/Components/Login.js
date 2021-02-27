@@ -26,19 +26,16 @@ class Login extends Component {
     });
   }
 
-  handleSubmit(event) {
+  handleSubmit(event) {   
+    event.preventDefault();
     axios.post("http://localhost:5000/host_login", 
     {username: this.state.username,
       password: this.state.password})
       .then(res => {
         window.localStorage.setItem("token", JSON.stringify(res.data));
-        //window.location = "/list"
+        window.location = "/list"
       })
       .catch(err => console.log(err))
-   
-    //alert("Username: " + this.state.username + "\nPassword: " + this.state.password)
-    event.preventDefault();
-    //window.location = "/list";
   }
 
   render() {
@@ -46,24 +43,35 @@ class Login extends Component {
       <div className="login">
         <div className="card">
           <form onSubmit={this.handleSubmit}>
-            <label>
-              Username:
+            <div className="label">
+              Username: 
+            </div>
+            <div className="field">
               <input
-                name="username"
-                type="text"
-                value={this.state.username}
-                onChange={this.handleInputChange} />
-            </label>
-            <br />
-            <label>
-              Password:
+                  className="username-box"
+                  name="username"
+                  type="text"
+                  value={this.state.username}
+                  onChange={this.handleInputChange} 
+                  autoComplete="off"/>
+            </div>    
+            <br></br>    
+            <div className="label">
+              Password: 
+            </div>   
+            <div className="field">
               <input
+                className="password-box"
                 name="password"
                 type="text"
                 value={this.state.password}
-                onChange={this.handleInputChange} />
-            </label>
-            <input type="submit" value="Submit" />
+                onChange={this.handleInputChange} 
+                autoComplete="off"/>
+              </div>  
+              <br></br>    
+              <div className="login-button-row" >
+                <input type="submit" value="Login" className="login-button"/>
+              </div>       
           </form>        
         </div>
       </div>

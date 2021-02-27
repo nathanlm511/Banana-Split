@@ -1,0 +1,15 @@
+.camera {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f2f9ff;
+}
+
+.camera-button {
+    background-color: bisque;
+    height: 50%;
+    width: 25%;
+}

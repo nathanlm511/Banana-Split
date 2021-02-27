@@ -10,10 +10,17 @@ class Camera extends Component {
     this.state = {}
   }
 
+  useCamera() {
+    console.log("hello");
+  }
+
   render() {
     return (
-      <div>
-        Camera
+      <div className="camera">
+         <input type="file" accept="image/*" capture="camera" className="camera-button"></input>
+        <div onClick={this.useCamera} className="camera-button">
+          Take a Picture
+        </div>
       </div>
     );
   }
