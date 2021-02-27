@@ -2,14 +2,17 @@ import flask
 import json
 from venmo_api import Client
 import cv2
+import pymongo
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
+db = client.db
+sessions = db['sessions']
 
 # Venmo Users
 host = None
 friends = []
-
+client = pymongo.MongoClient("mongodb+srv://jusjus:jusjus@cluster0.ksh52.mongodb.net/sessions?retryWrites=true&w=majority")
 
 @app.route('/', methods=['GET'])
 def home():
@@ -77,4 +80,19 @@ def friend_login():
 def host_confirm_request():
     pass
 
-app.run()
+#app.run()
+
+def create_session_on_db(username, num_users):
+    uuid = sessions.count() + 1
+    sessions.insert_one([{"uuid": uuid, "num_users":num_users, "num_items":0, "host": username, "items": [], "users": []}])
+    return uuid
+
+def add_item_to_session(session_id, name, price):
+    #??? IDS
+    sessions.update({"uuid": session_id}, {"$push": {"items": {"Name": name, "Price": price}}}) 
+
+def add_user_to_session(session_id, name):
+    sessions.update({"uuid": session_id}, {"$push": {"users": {"Name": name, "bought_items": []}}})
+    sessions.update({"uuid": session_id}, { "$inc": {"num_users": 1}})
+
+        
