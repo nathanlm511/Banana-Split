@@ -27,17 +27,18 @@ class Login extends Component {
   }
 
   handleSubmit(event) {
-    /*
-    axios.post(url, data)
+    axios.post("http://localhost:5000/host_login", 
+    {username: this.state.username,
+      password: this.state.password})
       .then(res => {
-        window.localStorage.setItem("token", JSON.stringify());
-        window.location = "/list"
+        window.localStorage.setItem("token", JSON.stringify(res.data));
+        //window.location = "/list"
       })
-      .catch(err => alert(err))
-    */
-    alert("Username: " + this.state.username + "\nPassword: " + this.state.password)
+      .catch(err => console.log(err))
+   
+    //alert("Username: " + this.state.username + "\nPassword: " + this.state.password)
     event.preventDefault();
-    window.location = "/list";
+    //window.location = "/list";
   }
 
   render() {
