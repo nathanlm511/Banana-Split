@@ -8,19 +8,30 @@ class Camera extends Component {
   constructor() {
     super();
     this.state = {}
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.fileInput = React.createRef();
   }
 
   useCamera() {
     console.log("hello");
   }
 
+  handleSubmit(e) {
+    //alert("test");
+    const imageFile = this.fileInput.current.files[0];
+    alert(imageFile);
+    console.dir(imageFile);
+    e.preventDefault();
+  }
+
   render() {
     return (
       <div className="camera">
-         <input type="file" accept="image/*" capture="camera" className="camera-button"></input>
-        <div onClick={this.useCamera} className="camera-button">
-          Take a Picture
-        </div>
+        <form onSubmit={this.handleSubmit} className="camera-form">
+         <input type="file" accept="image/*" capture="camera" ref={this.fileInput}></input>
+         <br></br>
+          <input type="submit"/>
+        </form>
       </div>
     );
   }

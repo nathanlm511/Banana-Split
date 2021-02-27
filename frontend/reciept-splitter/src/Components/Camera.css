@@ -13,3 +13,10 @@
     height: 50%;
     width: 25%;
 }
+
+.camera-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
