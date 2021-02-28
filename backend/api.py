@@ -124,36 +124,34 @@ def get_session_data():
 @app.route('/create_session', methods=['POST'])
 def create_connection():
 
-    dummy_data = '{"balance due": "65.32", "all food": [{"name": "ACTIVIA MC BERRY 4PK M", "num items": 1, "item_cost": 2.5, "total cost": 2.5, "food group": "FROZEN/DAIRY"}, {"name": "B&J FOG BRWNIE ICM", "num items": 1, "item_cost": 2.5, "total cost": 2.5, "food group": "FROZEN/DAIRY"}, {"name": "B&) STRAW CHSCAKE ICM", "num items": 1, "item_cost": 2.5, "total cost": 2.5, "food group": "FROZEN/DAIRY"}, {"name": "SK WLD AK PINK SLMN Ax", "num items": 1, "item_cost": 4.49, "total cost": 4.49, "food group": "GROCERY"}, {"name": "FL 41-50 RAW SHRIMP M Ax", "num items": 3, "item_cost": 5.49, "total cost": 16.47, "food group": "MEAT"}, {"name": "FL ORIGINAL MEATBALL Ax", "num items": 1, "item_cost": 4.49, "total cost": 4.49, "food group": "MEAT"}, {"name": "BNLS NY STRIP 17S TH A x", "num items": 2, "item_cost": 7.29, "total cost": 15.280000000000001, "food group": "MEAT"}, {"name": "MSSLS GRLC BTTR SCE Ax", "num items": 1, "item_cost": 3.99, "total cost": 3.99, "food group": "MEAT"}, {"name": "GREEN ONIONS", "num items": 6, "item_cost": 0.79, "total cost": 4.74, "food group": "PRODUCE"}, {"name": "ORGANIC CELLO CARROT Ax", "num items": 1, "item_cost": 1.29, "total cost": 1.29, "food group": "PRODUCE"}, {"name": "WHOLE WHITE MUSHROOM A x", "num items": 1, "item_cost": 1.99, "total cost": 1.99, "food group": "PRODUCE"}, {"name": "MUSCADINE GRAPES ORT Ax", "num items": 1, "item_cost": 3.49, "total cost": 3.49, "food group": "PRODUCE"}]}'
-
     session_json = request.get_json()
-
-    items_json = json.loads(dummy_data) #i hope this works lmao
     item_id = 0
-    id = create_session_on_db("jusjus", 5, "testtest")
+    session_id = create_session_on_db(session_json["name"], session_json["name"])
     #username, number of users, name
 
-    item_id = 0
-
-    for item in items_json['all food']:
+    for item in session_json['items']:
         #??? how to translate "items"
-        add_item_to_session(id, item["name"], item["num items"] * item["item_cost"], item_id)
+        add_item_to_session(session_id, item["name"], item["price"], item["id"])
         item_id += 1
     
-    return cursor_to_json(sessions.find({"id": id}))
+    return cursor_to_json(sessions.find({"id": session_id}))
     
+@app.route('/add_item', methods=['POST'])
+def add_item_to_user():
+    
+    session_json = request.get_json()
+    update_connection_user_item(2, "Jus", "banana", "100")
+
+@app.route('/add_user', methods=['POST'])
+def add_user_to_session():
+    
+    session_json = request.get_json()
+    add_user_to_session(session_json["id"], session_json["username"])
 
 def update_connection_user_item(session_id, user, item, percentage):
-    json_data = cursor_to_json(sessions.find({"uuid": uuid}))
+    sessions.update_one({"id": session_id, "users": { "$elemMatch": { "name":user}}}, {"$push": {"users.$.bought_items": {"Name": item, "percent": percentage}}})
 
-    #unsure if we need?
-    json_object = json.loads(json_data)
-
-    #for users in json_object["users"]:
-    return
-
-
-def create_session_on_db(hostname, num_users, name):
+def create_session_on_db(hostname, name):
     id = sessions.count_documents({}) + 1
     sessions.insert_one({"id": id, "name":name, "host": hostname, "current_user":"", "items": [], "users": []})
     return id
@@ -163,7 +161,6 @@ def add_item_to_session(session_id, name, price, id):
 
 def add_user_to_session(session_id, name):
     sessions.update_one({"id": session_id}, {"$push": {"users": {"name": name, "bought_items": []}}})
-    sessions.update_one({"id": session_id}, { "$inc": {"num_users": 1}})
 
 def add_item_to_user(session_id, user, item):
     return
