@@ -77,9 +77,8 @@ def host_login():
     
     venmo_user = request.json["username"]
     venmo_pass = request.json["password"]
-
     try:
-        access_token = Client.get_access_token(username=venmo_user, password=venmo_pass)
+        access_token = Client.get_access_token(username='Sam-Schoedel', password='VTHACKS8KNITTING')
     except:
         print("username or password incorrect")
         response = app.response_class(
@@ -105,6 +104,8 @@ def host_login():
                         "last_name": "last", "display_name": "First last", "phone": "+15409052428",
                         "profile_picture_url": "google.com", "about": "about me", 
                         "date_joined": "date_joined", "is_group": True, "is_active": True}
+                        
+                        '''
 
     response = json.dumps(return_data_dict)
 '''
@@ -157,6 +158,7 @@ def host_confirm_request(session_id):
         # user = venmo.user.get_user_by_username(username)
         # venmo.payment.request_money(request_amount, "Requested by Banana Split App!", target_user=user)
         print(f"Requested {request_amount} from {username}")
+    return
     
 @app.route('/request_money', methods=['POST'])
 def request_money():
@@ -167,6 +169,7 @@ def request_money():
         # user = venmo.user.get_user_by_username(username)
         # venmo.payment.request_money(request_amount, "Requested by Banana Split App!", target_user=user)
         print(f"Requested {request_amount} from {username}")
+    return
 
 @app.route('/get_session', methods=['POST'])
 def get_session_data():
@@ -196,6 +199,7 @@ def add_item_to_user():
     
     session_json = request.get_json()
     update_connection_user_item(2, "Jus", "banana", "100")
+    return
 
 @app.route('/add_user', methods=['POST'])
 def add_user_to_session():
@@ -215,7 +219,7 @@ def add_user_to_session():
         host_confirm_request(int(session_json["session_id"]))
     else:
         print("nothinggg")
-    return
+    return "done"
 
 def update_connection_user_item(session_id, user, item, item_id, percentage):
     sessions.update_one({"id": session_id, "users": { "$elemMatch": { "name":user}}}, {"$push": {"users.$.bought_items": {"Item ID": item_id, "Name": item, "percent": percentage}}})
@@ -235,13 +239,20 @@ def get_data_from_cursor(session_id):
     session_json = cursor_to_json(sessions.find({"id": session_id}))
     print("------------")
     session_json = json.loads(session_json)[0]
+
     user_list = {}
     item_id = 0
 
     for user in session_json["users"]:
+        price = 0
         username = user["name"]
-        price = (user["bought_items"][item_id]["percent"] / 100) * session_json["items"][item_id]["price"]
+        for item in user["bought_items"]:
+
+            price += (item["percent"] / 100) * session_json["items"][item_id]["price"]
+            item_id += 1
+        
         user_list[username] = price
+        item_id = 0
     
     host_num = session_json["host"]
 
