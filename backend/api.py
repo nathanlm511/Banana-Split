@@ -34,11 +34,12 @@ def home():
 @app.route('/test_image', methods=['POST'])
 def post_image():
     """ post image and return the response """ 
-    #filestr = request.files['file']
-    #npimg = np.fromfile(filestr, np.uint8)
+    filestr = request.files['file']
+    npimg = np.fromfile(filestr, np.uint8)
     img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
     # if image has been preprocessed
-    return parse_receipt(img)
+    parced_receipt = parse_receipt(img)
+    return json.dumps(parced_receipt)
 
     # # else if img is unprocessed
     # points = get_corner_points(img)
