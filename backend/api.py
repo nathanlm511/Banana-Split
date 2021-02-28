@@ -192,8 +192,10 @@ def add_user_to_session():
     for item in session_json["items"]:
         update_connection_user_item(int(session_json["session_id"]), session_json["name"], item["name"], item["id"], item["percentage"])
     
-    if (request.get_json()["current_user"]['allPaid']):
-        print(request.get_json()["current_user"]['allPaid'])
+    
+
+    if (request.get_json()['allPaid']):
+        print(request.get_json()['allPaid'])
     else:
         print("nothinggg")
 
