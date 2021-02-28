@@ -159,6 +159,7 @@ def host_confirm_request(session_id):
         # user = venmo.user.get_user_by_username(username)
         # venmo.payment.request_money(request_amount, "Requested by Banana Split App!", target_user=user)
         print(f"Requested {request_amount} from {username}")
+    return
     
 @app.route('/request_money', methods=['POST'])
 def request_money():
@@ -169,6 +170,7 @@ def request_money():
         # user = venmo.user.get_user_by_username(username)
         # venmo.payment.request_money(request_amount, "Requested by Banana Split App!", target_user=user)
         print(f"Requested {request_amount} from {username}")
+    return
 
 @app.route('/get_session', methods=['POST'])
 def get_session_data():
@@ -198,6 +200,7 @@ def add_item_to_user():
     
     session_json = request.get_json()
     update_connection_user_item(2, "Jus", "banana", "100")
+    return
 
 @app.route('/add_user', methods=['POST'])
 def add_user_to_session():
