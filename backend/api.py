@@ -182,7 +182,7 @@ def add_item_to_user():
 
 @app.route('/add_user', methods=['POST'])
 def add_user_to_session():
-    session_json = request.get_json()
+    session_json = request.get_json()["current_user"]
     if (sessions.count_documents({"users" : {"$elemMatch" : {"user_id": {"$eq": session_json["id"]}}}}, limit = 1)):
        sessions.update_one({"id": int(session_json["session_id"])}, {"$pull": {"users" : {"user_id": {"$eq": session_json["id"]}}}})
     
@@ -190,6 +190,13 @@ def add_user_to_session():
 
     for item in session_json["items"]:
         update_connection_user_item(int(session_json["session_id"]), session_json["name"], item["name"], item["id"], item["percentage"])
+    
+    
+
+    if (request.get_json()["current_user"]['allPaid']):
+        print(request.get_json()["current_user"]['allPaid'])
+    else:
+        print("nothinggg")
 
 def update_connection_user_item(session_id, user, item, item_id, percentage):
     sessions.update_one({"id": session_id, "users": { "$elemMatch": { "name":user}}}, {"$push": {"users.$.bought_items": {"Item ID": item_id, "Name": item, "percent": percentage}}})
@@ -204,6 +211,9 @@ def add_item_to_session(session_id, name, price, id):
 
 def add_user_to_session(session_id, user_id, name):
     sessions.update_one({"id": session_id}, {"$push": {"users": {"user_id": user_id, "name": name, "bought_items": []}}}, upsert=True)
+
+def get_data_from_cursor(session_id):
+    cursor_to_json(sessions.find({"id": session_id}))
 
 def cursor_to_json(cursor):
     return dumps(list(cursor), indent = 2)
