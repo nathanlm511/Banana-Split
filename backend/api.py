@@ -74,7 +74,7 @@ def post_image():
 # When host starts session. Can be after taking and processing picture of receipt
 @app.route('/host_login', methods=['POST'])
 def host_login():
-    '''
+    
     venmo_user = request.json["username"]
     venmo_pass = request.json["password"]
 
@@ -98,7 +98,7 @@ def host_login():
                         "last_name": host.last_name, "display_name": host.display_name, "phone": host.phone,
                         "profile_picture_url": host.profile_picture_url, "about": host.about, 
                         "date_joined": host.date_joined, "is_group": host.is_group, "is_active": host.is_active}
-    '''   
+    '''
     
     # Return jsonified data
     return_data_dict = {"id": "nathan1234", "username": "nathan_username", "first_name": "first",
@@ -107,7 +107,7 @@ def host_login():
                         "date_joined": "date_joined", "is_group": True, "is_active": True}
 
     response = json.dumps(return_data_dict)
-
+'''
     return response
 
 @app.route('/friend_login', methods=['POST'])
