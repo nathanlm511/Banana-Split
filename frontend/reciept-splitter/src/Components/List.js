@@ -45,7 +45,7 @@ class List extends Component {
     index++;
     if (session_data.users) {
       session_data.users.forEach(user => {
-        users.push({name: user.username, id: user.id, num: index});
+        users.push({name: user.name, id: user.id, num: index});
         index++;
       });
     }
@@ -60,16 +60,17 @@ class List extends Component {
     if (!session_data.current_user == "") {
       session_data.current_user.items.forEach(item => {
         let item_matched = items.find(e => e.id == item.id);
-        item_matched.slider = item.percentage;
+        item_matched.slider = item.percent;
         item_matched.checked = true;
       });
     }
     index = 1;
     if (session_data.users) {
       session_data.users.forEach(user => {
-        user.items.forEach(item => {
-          let item_matched = items.find(e => e.id == item.id);
-          item_matched.otherPercentages.push({id: index, percentage: item.percentage});
+        user.bought_items.forEach(item => {
+          console.log(item);
+          let item_matched = items.find(e => e.id == item["Item ID"]);
+          item_matched.otherPercentages.push({id: index, percentage: item.percent});
         });
         index++;
       });  
@@ -111,14 +112,13 @@ class List extends Component {
   }
 
   confirm() {
-    /*
     let itemsToDb = [];
     this.state.items.forEach(item => {
       let newItem = {};
       newItem.id = item.id;
       newItem.name = item.name;
       newItem.price = item.price;
-      newItem.percentage = item.slider * item.percentage;
+      newItem.percentage = item.slider * item.percentage / 100;
       itemsToDb.push(newItem);
     });
     const user_token = JSON.parse(window.localStorage.getItem("token"));
@@ -133,8 +133,7 @@ class List extends Component {
       console.log(res.data);
     })
     .catch(err => console.log(err));
-    */
-    this.setState({isOpen: true});
+    // this.setState({isOpen: true});
   }
 
   closeModal() {    

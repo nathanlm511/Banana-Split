@@ -38,7 +38,8 @@ def post_image():
     npimg = np.fromfile(filestr, np.uint8)
     img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
     # if image has been preprocessed
-    return parse_receipt(img)
+    parced_receipt = parse_receipt(img)
+    return json.dumps(parced_receipt)
 
     # # else if img is unprocessed
     # points = get_corner_points(img)
@@ -100,7 +101,7 @@ def host_login():
     '''   
     
     # Return jsonified data
-    return_data_dict = {"id": "1234", "username": "my_username", "first_name": "first",
+    return_data_dict = {"id": "nathan1234", "username": "nathan_username", "first_name": "first",
                         "last_name": "last", "display_name": "First last", "phone": "123-456-1234",
                         "profile_picture_url": "google.com", "about": "about me", 
                         "date_joined": "date_joined", "is_group": True, "is_active": True}

@@ -50,8 +50,8 @@
     position: relative;
     border-radius: 100px;
     background-color: #FFF;
-    border: 2px solid lightblue;;
-    box-shadow: 0px 0px 0px 0px lightblue inset;
+    border: 2px solid #a4c3d2;;
+    box-shadow: 0px 0px 0px 0px #a4c3d2 inset;
 }
 
 .check {
@@ -62,9 +62,9 @@
     align-items: center;
     position: relative;
     border-radius: 100px;
-    background-color: lightblue;
-    border: 2px solid lightblue;
-    box-shadow: 0px 0px 0px 0px lightblue inset;
+    background-color: #a4c3d2;
+    border: 2px solid #a4c3d2;
+    box-shadow: 0px 0px 0px 0px #a4c3d2 inset;
 }
 
 .slider {
@@ -98,15 +98,15 @@
 }
 
 .highlight-0 {
-    background-color: lightblue;
+    background-color: #a4c3d2;
     border-radius: 10px;
 }
 .highlight-1 {
-    background-image: url("../Images/green.jpg");
+    background-color: #fdaaaa;
     border-radius: 10px;
 }
 .highlight-2 {
-    background-image: url("../Images/blue.jpg");
+    background-color: #c8e1cc;
     border-radius: 10px;
 }
 .highlight-3 {
@@ -213,6 +213,7 @@ input[type=range].slider::-webkit-slider-thumb {
     width: 25px;
     border-radius: 100px;
     margin-left: 10px;
+    margin-right: 30px;
 }
 
 .list-title {
