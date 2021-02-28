@@ -35,7 +35,7 @@ def parse_receipt(processed_image):
             # Check all possible keywords for every row
             whole_string = (' ').join(row)
             closest_word, similarity = process.extractOne(whole_string, keywords)
-            print(f"sim: {similarity}, closest_header: {closest_word}, orig row: {row}")
+            # print(f"sim: {similarity}, closest_header: {closest_word}, orig row: {row}")
             
             # Check similarity first
             if similarity > 70 - tries:
@@ -99,12 +99,12 @@ def parse_receipt(processed_image):
                 # Check if food exists in keywords already
                 # If so, iterate num_items for food_name and skip appending new food to foods
                 closest_word, similarity = process.extractOne(food_name, keywords)
-                print(f"sim: {similarity}, closest_header: {closest_word}, orig name: {food_name}")
+                # print(f"sim: {similarity}, closest_header: {closest_word}, orig name: {food_name}")
                 food_entry_index = next((i for i, item in enumerate(foods) if item['name'] == closest_word), None)
                 if similarity > 70 and food_entry_index != None:
                     foods[food_entry_index]['num items'] += 1
                     foods[food_entry_index]['total cost'] += food_cost
-                    print("adding")
+                    # print("adding")
                 else:
                     # Check to see if we have to parse a second line for this food item
                     if food_cost == -1:
@@ -112,7 +112,7 @@ def parse_receipt(processed_image):
                     else:
                         num_items = 1
                         foods.append({"name": food_name, "num items": num_items,
-                                "item cost": food_cost/num_items, "total cost": food_cost, "food group": group})
+                                "item_cost": food_cost/num_items, "total cost": food_cost, "food group": group})
                         # Add food name to keywords list
                         keywords.append(food_name)
                     
@@ -128,11 +128,16 @@ def parse_receipt(processed_image):
                 
                 # Find number of item purchased
                 num_purchased_str = ""
+                num_items = 0
                 for char in items_purchased_string:
                     if is_number(char):
                         num_purchased_str += char
                 print(num_purchased_str)
-                num_items = int(num_purchased_str)
+                try:
+                    num_items = int(num_purchased_str)
+                except:
+                    print("num_purchased_str could not be converted to an integer: defaulting to 1")
+                    num_items = 1
                 print(num_items)
                 
                 # Loop through remaining words
@@ -152,10 +157,27 @@ def parse_receipt(processed_image):
                     
                         
                 foods.append({"name": food_name, "num items": num_items,
-                            "item cost": food_cost/num_items, "total cost": food_cost, "food group": group})
+                            "item_cost": food_cost/num_items, "total cost": food_cost, "food group": group})
     
-    # Return type is dictionary of {'balance due': (scalar), 
-    #                               'all food': {'name': (string), 'num items': (int),
-    #                                            'item cost': (float), 'total cost': (float),
-    #                                            'food group': (string)} }
+    total_read_cost = 0
+    for food in foods:
+        total_read_cost += food['total cost']
+    if not is_number(balance_due):
+        balance_due = total_read_cost
+    
     return {"balance due": balance_due, "all food": foods}
+
+
+# frame = cv2.imread('images/receipt_test3.jpg',0) # Preprocessed image
+
+# receipt = parse_receipt(frame)
+
+# print("\n\nFood: price\n")
+# total_read_cost = 0
+# for food in receipt['all food']:
+#     total_read_cost += food['total cost']
+#     print(f"{food['name']}: ${food['total cost']}, x{food['num items']}, {food['food group']}")
+    
+# print(f"\nbalance due: ${receipt['balance due']}, calculated cost: ${total_read_cost}, error: ${abs(float(receipt['balance due']) - total_read_cost)}")
+# print("\n\n")
+# print(receipt)
