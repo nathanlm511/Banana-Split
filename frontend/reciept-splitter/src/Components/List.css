@@ -188,7 +188,7 @@ input[type=range].slider::-webkit-slider-thumb {
     min-height: 150px;
     margin: 25px;
     position: fixed;
-    z-index: 1001;
+    z-index: 1000;
 }
 
 .high-z {
@@ -312,4 +312,44 @@ input[type=range].slider::-webkit-slider-thumb {
 .session-link {
     position: relative;
     top: 10px;
+}
+
+.modal {
+    position: fixed;
+    top: 25%;
+    left: 25%;
+    z-index: 3000;
+    width: 50%;
+    height: 50%;
+    border: none;
+    outline: none;
+    border-width: 0px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.171);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-family: 'Quicksand', sans-serif;
+    background-color: #fffefc;
+}
+
+.modal-inside {
+    width: 80%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.check-img {
+    background-image: url("../Images/checkmark.png");
+    background-size: 100% 100%;
+    height: 50px;
+    width: 75px;
+    z-index: 5000;
+    margin-top: 25px;
 }

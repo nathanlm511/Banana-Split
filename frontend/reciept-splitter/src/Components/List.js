@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from 'axios';
+import ReactDOM from 'react-dom';
+import Modal from 'react-modal';
 
 import './List.css';
 
 class List extends Component {
   constructor() {
     super();
+    this.state = {isOpen: false}
     /*
     this.state = {
       items: [{id: "1", name: "water", price: 14, percentage: 34, checked: false, slider: 0, otherPercentages: [12, 25, 30]},
@@ -16,7 +19,15 @@ class List extends Component {
     }
     */
    this.confirm = this.confirm.bind(this);
+   this.closeModal = this.closeModal.bind(this);
   }
+
+  customStyles = {
+    content : {
+      border: "none"
+    },
+    overlay: {zIndex: 1000}
+  };
 
   componentWillMount() {
     const session_data = JSON.parse(window.localStorage.getItem("session_data"));
@@ -100,6 +111,7 @@ class List extends Component {
   }
 
   confirm() {
+    /*
     let itemsToDb = [];
     this.state.items.forEach(item => {
       let newItem = {};
@@ -121,6 +133,12 @@ class List extends Component {
       console.log(res.data);
     })
     .catch(err => console.log(err));
+    */
+    this.setState({isOpen: true});
+  }
+
+  closeModal() {    
+    this.setState({isOpen: false});
   }
 
   render() {
@@ -135,7 +153,7 @@ class List extends Component {
         </div>
         <div className="list-header-container">
           <div className="list-title">
-            Nathan's Grocery List
+            Your Grocery List
           </div>
           <div className="session-link">{"Session URL: http://localhost:5000/login/" + window.localStorage.getItem("session_id")}</div>
           <div className="legend-container">
@@ -194,7 +212,17 @@ class List extends Component {
               </div>
             </div>  
           </div>
-        </div>        
+        </div>   
+        <Modal
+          style={this.customStyles}
+          className="modal"
+          isOpen={this.state.isOpen}
+          onRequestClose={this.closeModal}>
+            <div className="modal-inside">
+            You have succesfully confirmed you contribution! Feel free to stay and make changes to you confirmation!
+                <div className="check-img" />
+            </div>         
+        </Modal>     
       </div>
     );
   }
