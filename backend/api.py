@@ -102,7 +102,7 @@ def host_login():
     
     # Return jsonified data
     return_data_dict = {"id": "nathan1234", "username": "nathan_username", "first_name": "first",
-                        "last_name": "last", "display_name": "First last", "phone": "123-456-1234",
+                        "last_name": "last", "display_name": "First last", "phone": "+15409052428",
                         "profile_picture_url": "google.com", "about": "about me", 
                         "date_joined": "date_joined", "is_group": True, "is_active": True}
 
@@ -148,7 +148,7 @@ def host_confirm_request(session_id):
     # num = "+13303099014"
     num = names_dict['host num']
     link_to_page = "https://something"
-    message = "Everyone has filled up their shopping carts! Request your money here: " + link_to_page
+    message = "Everyone has confirmed their money for your receipt! Request your money here: " + link_to_page
     client.messages.create(to=num, 
                         from_="+13023004884", 
                         body=message)
@@ -229,16 +229,17 @@ def add_user_to_session(session_id, user_id, name):
 
 def get_data_from_cursor(session_id):
     session_json = cursor_to_json(sessions.find({"id": session_id}))
-
+    print("------------")
+    session_json = json.loads(session_json)[0]
     user_list = {}
     item_id = 0
 
     for user in session_json["users"]:
         username = user["name"]
-        price = (user["bought items"][item_id]["percent"] / 100) * session_json["items"][item_id]["price"]
+        price = (user["bought_items"][item_id]["percent"] / 100) * session_json["items"][item_id]["price"]
         user_list[username] = price
     
-    user_list['host num'] = session_json["hostname"]
+    user_list['host num'] = session_json["host"]
 
     return user_list
 
