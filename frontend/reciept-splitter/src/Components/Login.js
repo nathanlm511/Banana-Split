@@ -33,6 +33,7 @@ class Login extends Component {
       password: this.state.password})
       .then(res => {
         window.localStorage.setItem("token", JSON.stringify(res.data));
+        window.localStorage.setItem("venmo_token", res.data.token);
         if (window.localStorage.getItem("session_id") == "login") {
           window.location = "/camera";
         }

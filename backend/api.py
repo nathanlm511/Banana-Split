@@ -99,7 +99,7 @@ def host_login():
     return_data_dict = {"id": host.id, "username": host.username, "first_name": host.first_name,
                         "last_name": host.last_name, "display_name": host.display_name, "phone": host.phone,
                         "profile_picture_url": host.profile_picture_url, "about": host.about, 
-                        "date_joined": host.date_joined, "is_group": host.is_group, "is_active": host.is_active}
+                        "date_joined": host.date_joined, "is_group": host.is_group, "is_active": host.is_active, "token": access_token}
     
     '''
     # Return jsonified data
@@ -184,12 +184,14 @@ def host_confirm_request(session_id):
     
 @app.route('/request_money', methods=['POST'])
 def request_money():
+    venmo_token = request.json['venmo_token']
+    venmo = Client(access_token=venmo_token)
     session_id = int(request.json["session_id"])
     names_dict, num = get_data_from_cursor(session_id)
     for username in names_dict:
         request_amount = names_dict[username]
-        # user = venmo.user.get_user_by_username(username)
-        # venmo.payment.request_money(request_amount, "Requested by Banana Split App!", target_user=user)
+        user = venmo.user.get_user_by_username(username)
+        venmo.payment.request_money(request_amount, "Requested by Banana Split App!", target_user=user)
         print(f"Requested {request_amount} from {username}")
     return
 

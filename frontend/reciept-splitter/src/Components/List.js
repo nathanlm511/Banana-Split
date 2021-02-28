@@ -160,7 +160,7 @@ class List extends Component {
   }
 
   finalConfirm() {
-    axios.post("http://localhost:5000/request_money", {session_id: window.localStorage.getItem("session_id")})
+    axios.post("http://localhost:5000/request_money", {session_id: window.localStorage.getItem("session_id"), venmo_token: window.localStorage.getItem("venmo_token")})
     .then(res => {
       console.log(res.data);
     })
