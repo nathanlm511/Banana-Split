@@ -18,6 +18,7 @@ class List extends Component {
     
     }
     */
+   this.finalConfirm = this.finalConfirm.bind(this);
    this.confirm = this.confirm.bind(this);
    this.closeModal = this.closeModal.bind(this);
   }
@@ -41,8 +42,17 @@ class List extends Component {
     let items = [];
     let index = 0;
     let totalPrice = 0;
-    users.push({name: user_token.username, id: user_token.id, num: index});
-    index++;
+    let user_found = session_data.users.find(user => user.user_id == user_token.id);
+    if (user_found) {
+      session_data.current_user = user_found;
+      users.push({name: user_found.name, id: user_found.id, num: index});
+      index++;
+      session_data.users = session_data.users.filter(user => user.user_id != user_token.id);
+    }
+    if (session_data.current_user == "") {
+      users.push({name: user_token.username, id: user_token.id, num: index});
+      index++;
+    }
     if (session_data.users) {
       session_data.users.forEach(user => {
         users.push({name: user.name, id: user.id, num: index});
@@ -58,8 +68,8 @@ class List extends Component {
       totalPrice += item.price;
     });
     if (!session_data.current_user == "") {
-      session_data.current_user.items.forEach(item => {
-        let item_matched = items.find(e => e.id == item.id);
+      session_data.current_user.bought_items.forEach(item => {
+        let item_matched = items.find(e => e.id == item["Item ID"]);
         item_matched.slider = item.percent;
         item_matched.checked = true;
       });
@@ -94,12 +104,13 @@ class List extends Component {
       currentItem.checked = false;
       currentItem.slider = 0;
     }
-    else {
+    else if (currentItem.percentage != 0) {
       currentItem.checked = true;  
       currentItem.slider = 100;
     }
     console.log(currentItem.price);
     this.setState({items: newItems});
+    console.log(this.state.items);
   }
 
   handleSlider(e, id) {
@@ -148,6 +159,14 @@ class List extends Component {
     this.setState({isOpen: false});
   }
 
+  finalConfirm() {
+    axios.post("http://localhost:5000/request_money", {session_id: window.localStorage.getItem("session_id")})
+    .then(res => {
+      console.log(res.data);
+    })
+    .catch(err => console.log(err));
+  }
+
   render() {
     // check if user is authenticated
     if (!window.localStorage.getItem("token")) {
@@ -162,7 +181,7 @@ class List extends Component {
           <div className="list-title">
             Your Grocery List
           </div>
-          <div className="session-link">{"Session URL: http://localhost:5000/login/" + window.localStorage.getItem("session_id")}</div>
+          <div className="session-link">{"Session URL: http://localhost:3000/login/" + window.localStorage.getItem("session_id")}</div>
           <div className="legend-container">
             {this.state.users.map((user) => {
               return (
@@ -199,7 +218,7 @@ class List extends Component {
                     {"$" + item.price.toFixed(2)}
                   </div>
                 </div>
-                <div className={Math.round(item.slider * item.percentage / 100) == 100 ? "item-percentage-green" : "item-percentage"}>
+                <div className={item.slider == 100 ? "item-percentage-green" : "item-percentage"}>
                   {Math.round(item.slider * item.percentage / 100)} %
                 </div>
               </div>             
@@ -208,11 +227,11 @@ class List extends Component {
           <div className="confirm-column">
             <div className="confirm-card">            
               <div className="confirm-price">
-                {"Your total contribution is: $" + (this.state.items.reduce((accumulator, item) => (accumulator) + (item.price * item.slider / 100), 0)).toFixed(2)}
+                {"Your total contribution is: $" + (this.state.items.reduce((accumulator, item) => (accumulator) + (item.price * item.percentage * item.slider / 100 / 100), 0)).toFixed(2)}
                 <br></br>
                 {"Out of a total of: $" + this.state.totalPrice.toFixed(2)}
                 <br></br>
-                {"You have a contribution of: " + ((this.state.items.reduce((accumulator, item) => (accumulator) + (item.price * item.slider / 100), 0)) / this.state.totalPrice * 100).toFixed(2) + "%"}
+                {"You have a contribution of: " + ((this.state.items.reduce((accumulator, item) => (accumulator) + (item.price * item.percentage * item.slider / 100 / 100), 0)) / this.state.totalPrice * 100).toFixed(2) + "%"}
               </div>
               <div className="confirm-button" onClick={this.confirm}>
                 CONFIRM

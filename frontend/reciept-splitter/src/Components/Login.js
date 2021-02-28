@@ -51,6 +51,7 @@ class Login extends Component {
   }
 
   componentDidMount() {
+    window.localStorage.clear();
     window.localStorage.setItem("session_id", window.location.href.split('\\').pop().split('/').pop());    
   }
 

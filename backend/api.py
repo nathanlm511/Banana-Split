@@ -101,11 +101,13 @@ def host_login():
                         "profile_picture_url": host.profile_picture_url, "about": host.about, 
                         "date_joined": host.date_joined, "is_group": host.is_group, "is_active": host.is_active}
     
+    '''
     # Return jsonified data
     return_data_dict = {"id": "nathan1234", "username": "nathan_username", "first_name": "first",
                         "last_name": "last", "display_name": "First last", "phone": "+15409052428",
                         "profile_picture_url": "google.com", "about": "about me", 
                         "date_joined": "date_joined", "is_group": True, "is_active": True}
+                        '''
                         
 
     response = json.dumps(return_data_dict)
@@ -182,8 +184,8 @@ def host_confirm_request(session_id):
     
 @app.route('/request_money', methods=['POST'])
 def request_money():
-
-    names_dict = get_data_from_cursor(session_id)
+    session_id = int(request.json["session_id"])
+    names_dict, num = get_data_from_cursor(session_id)
     for username in names_dict:
         request_amount = names_dict[username]
         # user = venmo.user.get_user_by_username(username)
