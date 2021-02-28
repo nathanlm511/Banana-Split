@@ -128,8 +128,9 @@ def create_connection():
     session_id = create_session_on_db(session_json["name"], session_json["name"])
     #username, number of users, name
 
-    for item in session_json['items']:
+    for item in session_json['items']['all food']:
         #??? how to translate "items"
+        
         add_item_to_session(session_id, item["name"], item["price"], item["id"])
         item_id += 1
     
@@ -159,7 +160,7 @@ def add_item_to_session(session_id, name, price, id):
     sessions.update_one({"id": session_id}, {"$push": {"items": {"id": id, "name": name, "price": price}}}) 
 
 def add_user_to_session(session_id, name):
-    sessions.update_one({"id": session_id}, {"$push": {"users": {"name": name, "bought_items": []}}})
+    sessions.replace_one({"id": session_id}, {"$push": {"users": {"name": name, "bought_items": []}}}, upsert=True)
 
 def add_item_to_user(session_id, user, item):
     return
