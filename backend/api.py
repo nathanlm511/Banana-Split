@@ -44,7 +44,7 @@ def post_image():
     uuid = create_session_on_db(session_json["username"], session_json["num_users"], session_json["name"])
     #username, number of users, name
 
-    for (item in dummy_data["all food"]):
+    for item in dummy_data["all food"]:
         #??? how to translate "items"
         add_item_to_session(uuid, item["name"], item["num items"] * item["item_cost"], item_id)
         id += 1
@@ -127,7 +127,7 @@ def friend_login():
 def host_confirm_request():
     pass
 
-@app.route('/get_session', method=['GET'])
+@app.route('/get_session', methods=['GET'])
 def get_session_data():
     uuid = request.json["uuid"]
 
@@ -137,6 +137,7 @@ app.run()
 
 @app.route('/create_session', methods=['POST'])
 def create_connection(hostname, items, num_users, name):
+    return
     
 
 def update_connection_user_item(session_id, user, item, percentage):
@@ -145,7 +146,9 @@ def update_connection_user_item(session_id, user, item, percentage):
     #unsure if we need?
     json_object = json.loads(json_data)
 
-    for users in json_object["users"]
+    #for users in json_object["users"]:
+    return
+
 
 def create_session_on_db(username, num_users):
     uuid = sessions.count() + 1
@@ -153,13 +156,14 @@ def create_session_on_db(username, num_users):
     return uuid
 
 def add_item_to_session(session_id, name, price, id):
-    sessions.update({"uuid": session_id}, {"$push": {"items": {"id": id "Name": name, "Price": price}}}) 
+    sessions.update({"uuid": session_id}, {"$push": {"items": {"id": id, "Name": name, "Price": price}}}) 
 
 def add_user_to_session(session_id, name):
     sessions.update({"uuid": session_id}, {"$push": {"users": {"Name": name, "bought_items": []}}})
     sessions.update({"uuid": session_id}, { "$inc": {"num_users": 1}})
 
 def add_item_to_user(session_id, user, item):
+    return
 
 def cursor_to_json(cursor):
     return dumps(list(cursor), indent = 2)

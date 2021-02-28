@@ -79,6 +79,7 @@ class List extends Component {
     }
     else {
       currentItem.checked = true;  
+      currentItem.slider = 100;
     }
     this.setState({items: newItems});
   }
@@ -99,7 +100,7 @@ class List extends Component {
       newItem.id = item.id;
       newItem.name = item.name;
       newItem.price = item.price;
-      newItem.percentage = item.slider;
+      newItem.percentage = item.slider * item.percentage;
       itemsToDb.push(newItem);
     });
     const user_token = JSON.parse(window.localStorage.getItem("token"));
