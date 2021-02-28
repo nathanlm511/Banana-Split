@@ -5,6 +5,7 @@ import cv2
 import pymongo
 from flask_cors import CORS, cross_origin
 import numpy as np
+from bson.json_util import dumps
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -32,23 +33,6 @@ def post_image():
     #cv2.waitKey(0)
 
     #decode_ung
-    
-    dummy_data = '{"balance due": "65.32", "all food": [{"name": "ACTIVIA MC BERRY 4PK M", "num items": 1, "item_cost": 2.5, "total cost": 2.5, "food group": "FROZEN/DAIRY"}, {"name": "B&J FOG BRWNIE ICM", "num items": 1, "item_cost": 2.5, "total cost": 2.5, "food group": "FROZEN/DAIRY"}, {"name": "B&) STRAW CHSCAKE ICM", "num items": 1, "item_cost": 2.5, "total cost": 2.5, "food group": "FROZEN/DAIRY"}, {"name": "SK WLD AK PINK SLMN Ax", "num items": 1, "item_cost": 4.49, "total cost": 4.49, "food group": "GROCERY"}, {"name": "FL 41-50 RAW SHRIMP M Ax", "num items": 3, "item_cost": 5.49, "total cost": 16.47, "food group": "MEAT"}, {"name": "FL ORIGINAL MEATBALL Ax", "num items": 1, "item_cost": 4.49, "total cost": 4.49, "food group": "MEAT"}, {"name": "BNLS NY STRIP 17S TH A x", "num items": 2, "item_cost": 7.29, "total cost": 15.280000000000001, "food group": "MEAT"}, {"name": "MSSLS GRLC BTTR SCE Ax", "num items": 1, "item_cost": 3.99, "total cost": 3.99, "food group": "MEAT"}, {"name": "GREEN ONIONS", "num items": 6, "item_cost": 0.79, "total cost": 4.74, "food group": "PRODUCE"}, {"name": "ORGANIC CELLO CARROT Ax", "num items": 1, "item_cost": 1.29, "total cost": 1.29, "food group": "PRODUCE"}, {"name": "WHOLE WHITE MUSHROOM A x", "num items": 1, "item_cost": 1.99, "total cost": 1.99, "food group": "PRODUCE"}, {"name": "MUSCADINE GRAPES ORT Ax", "num items": 1, "item_cost": 3.49, "total cost": 3.49, "food group": "PRODUCE"}]}'
-
-
-    session_json = request.get_json()
-    items_json = json.loads(dummy_data) #i hope this works lmao
-
-    item_id = 0
-    uuid = create_session_on_db(session_json["username"], session_json["num_users"], session_json["name"])
-    #username, number of users, name
-
-    for item in dummy_data["all food"]:
-        #??? how to translate "items"
-        add_item_to_session(uuid, item["name"], item["num items"] * item["item_cost"], item_id)
-        id += 1
-    
-    return cursor_to_json(sessions.find({"uuid": uuid}))
 
 
 # When host starts session. Can be after taking and processing picture of receipt
@@ -128,14 +112,31 @@ def host_confirm_request():
 
 @app.route('/get_session', methods=['GET'])
 def get_session_data():
-    uuid = request.json["uuid"]
+    id = request.json["id"]
 
-    return cursor_to_json(sessions.find({"uuid": uuid}))
+    return cursor_to_json(sessions.find({"id": id}))
 
 
 @app.route('/create_session', methods=['POST'])
-def create_connection(hostname, items, num_users, name):
-    return
+def create_connection():
+
+    dummy_data = '{"balance due": "65.32", "all food": [{"name": "ACTIVIA MC BERRY 4PK M", "num items": 1, "item_cost": 2.5, "total cost": 2.5, "food group": "FROZEN/DAIRY"}, {"name": "B&J FOG BRWNIE ICM", "num items": 1, "item_cost": 2.5, "total cost": 2.5, "food group": "FROZEN/DAIRY"}, {"name": "B&) STRAW CHSCAKE ICM", "num items": 1, "item_cost": 2.5, "total cost": 2.5, "food group": "FROZEN/DAIRY"}, {"name": "SK WLD AK PINK SLMN Ax", "num items": 1, "item_cost": 4.49, "total cost": 4.49, "food group": "GROCERY"}, {"name": "FL 41-50 RAW SHRIMP M Ax", "num items": 3, "item_cost": 5.49, "total cost": 16.47, "food group": "MEAT"}, {"name": "FL ORIGINAL MEATBALL Ax", "num items": 1, "item_cost": 4.49, "total cost": 4.49, "food group": "MEAT"}, {"name": "BNLS NY STRIP 17S TH A x", "num items": 2, "item_cost": 7.29, "total cost": 15.280000000000001, "food group": "MEAT"}, {"name": "MSSLS GRLC BTTR SCE Ax", "num items": 1, "item_cost": 3.99, "total cost": 3.99, "food group": "MEAT"}, {"name": "GREEN ONIONS", "num items": 6, "item_cost": 0.79, "total cost": 4.74, "food group": "PRODUCE"}, {"name": "ORGANIC CELLO CARROT Ax", "num items": 1, "item_cost": 1.29, "total cost": 1.29, "food group": "PRODUCE"}, {"name": "WHOLE WHITE MUSHROOM A x", "num items": 1, "item_cost": 1.99, "total cost": 1.99, "food group": "PRODUCE"}, {"name": "MUSCADINE GRAPES ORT Ax", "num items": 1, "item_cost": 3.49, "total cost": 3.49, "food group": "PRODUCE"}]}'
+
+    session_json = request.get_json()
+
+    items_json = json.loads(dummy_data) #i hope this works lmao
+    item_id = 0
+    id = create_session_on_db("jusjus", 5, "testtest")
+    #username, number of users, name
+
+    item_id = 0
+
+    for item in items_json['all food']:
+        #??? how to translate "items"
+        add_item_to_session(id, item["name"], item["num items"] * item["item_cost"], item_id)
+        item_id += 1
+    
+    return cursor_to_json(sessions.find({"id": id}))
     
 
 def update_connection_user_item(session_id, user, item, percentage):
@@ -148,17 +149,17 @@ def update_connection_user_item(session_id, user, item, percentage):
     return
 
 
-def create_session_on_db(username, num_users):
-    uuid = sessions.count() + 1
-    sessions.insert_one([{"uuid": uuid, "num_users":num_users, "num_items":0, "host": username, "items": [], "users": []}])
-    return uuid
+def create_session_on_db(hostname, num_users, name):
+    id = sessions.count_documents({}) + 1
+    sessions.insert_one({"id": id, "name":name, "host": hostname, "current_user":"", "items": [], "users": []})
+    return id
 
 def add_item_to_session(session_id, name, price, id):
-    sessions.update({"uuid": session_id}, {"$push": {"items": {"id": id, "Name": name, "Price": price}}}) 
+    sessions.update_one({"id": session_id}, {"$push": {"items": {"id": id, "Name": name, "Price": price}}}) 
 
 def add_user_to_session(session_id, name):
-    sessions.update({"uuid": session_id}, {"$push": {"users": {"Name": name, "bought_items": []}}})
-    sessions.update({"uuid": session_id}, { "$inc": {"num_users": 1}})
+    sessions.update_one({"id": session_id}, {"$push": {"users": {"Name": name, "bought_items": []}}})
+    sessions.update_one({"id": session_id}, { "$inc": {"num_users": 1}})
 
 def add_item_to_user(session_id, user, item):
     return
