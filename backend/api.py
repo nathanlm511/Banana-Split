@@ -127,6 +127,12 @@ def friend_login():
 def host_confirm_request():
     pass
 
+@app.route('/get_session', method=['GET'])
+def get_session_data():
+    uuid = request.json["uuid"]
+
+    return cursor_to_json(sessions.find({"uuid": uuid}))
+
 app.run()
 
 @app.route('/create_session', methods=['POST'])
