@@ -167,7 +167,7 @@ def parse_receipt(processed_image):
         
     print("\n\nFood: price\n")
     total_read_cost = 0
-    for food in receipt['all food']:
+    for food in foods:
         total_read_cost += food['total cost']
         print(f"{food['name']}: ${food['total cost']}, x{food['num items']}, {food['food group']}")
         
@@ -175,9 +175,9 @@ def parse_receipt(processed_image):
     return {"balance due": balance_due, "all food": foods}
 
 
-# frame = cv2.imread('images/receipt_test3.jpg',0) # Preprocessed image
+frame = cv2.imread('images/receipt_test3.jpg',0) # Preprocessed image
 
-# receipt = parse_receipt(frame)
+receipt = parse_receipt(frame)
 
 # print("\n\nFood: price\n")
 # total_read_cost = 0
