@@ -38,7 +38,8 @@ def post_image():
     npimg = np.fromfile(filestr, np.uint8)
     img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
     # if image has been preprocessed
-    return parse_receipt(img)
+    parced_receipt = parse_receipt(img)
+    return json.dumps(parced_receipt)
 
     # # else if img is unprocessed
     # points = get_corner_points(img)
@@ -100,7 +101,7 @@ def host_login():
     '''   
     
     # Return jsonified data
-    return_data_dict = {"id": "1234", "username": "my_username", "first_name": "first",
+    return_data_dict = {"id": "nathan1234", "username": "nathan_username", "first_name": "first",
                         "last_name": "last", "display_name": "First last", "phone": "123-456-1234",
                         "profile_picture_url": "google.com", "about": "about me", 
                         "date_joined": "date_joined", "is_group": True, "is_active": True}
@@ -178,7 +179,6 @@ def create_connection():
 
     for item in session_json['items']['all food']:
         #??? how to translate "items"
-        print(item)
         add_item_to_session(session_id, item["name"], item["total cost"], item_id)
         item_id += 1
     
@@ -192,17 +192,23 @@ def add_item_to_user():
 
 @app.route('/add_user', methods=['POST'])
 def add_user_to_session():
-    session_json = request.get_json()
-    if (db.mycollection.count_documents({"users" : {"user_id": session_json["id"]}}, limit = 1)):
-        for item in session_json["items"]:
-            sessions.update_one({"id": session_id, "users": { "bought_items": { "$elemMatch": {"id": session_json["items"]["ID"]}}}}, {"$set": {"users": {"name": name, "bought_items": []}}}, upsert=True)
+    session_json = request.get_json()["current_user"]
+    if (sessions.count_documents({"users" : {"$elemMatch" : {"user_id": {"$eq": session_json["id"]}}}}, limit = 1)):
+       sessions.update_one({"id": int(session_json["session_id"])}, {"$pull": {"users" : {"user_id": {"$eq": session_json["id"]}}}})
+    
+    add_user_to_session(int(session_json["session_id"]), session_json["id"], session_json["name"])
+
+    for item in session_json["items"]:
+        update_connection_user_item(int(session_json["session_id"]), session_json["name"], item["name"], item["id"], item["percentage"])
+    
+    
+
+    if (request.get_json()['allPaid']):
+        print(request.get_json()['allPaid'])
     else:
-        add_user_to_session(int(session_json["session_id"]), session_json["id"], session_json["name"])
+        print("nothinggg")
 
-        for item in session_json["items"]:
-            update_connection_user_item(int(session_json["session_id"]), session_json["name"], item["name"], item["id"], item["percentage"])
-
-def update_connection_user_item(session_id, user, item, item_id,percentage):
+def update_connection_user_item(session_id, user, item, item_id, percentage):
     sessions.update_one({"id": session_id, "users": { "$elemMatch": { "name":user}}}, {"$push": {"users.$.bought_items": {"Item ID": item_id, "Name": item, "percent": percentage}}})
 
 def create_session_on_db(hostname, name):
@@ -215,6 +221,19 @@ def add_item_to_session(session_id, name, price, id):
 
 def add_user_to_session(session_id, user_id, name):
     sessions.update_one({"id": session_id}, {"$push": {"users": {"user_id": user_id, "name": name, "bought_items": []}}}, upsert=True)
+
+def get_data_from_cursor(session_id):
+    session_json = cursor_to_json(sessions.find({"id": session_id}))
+
+    user_list = []
+    item_id = 0
+
+    for user in session_json["users"]:
+        username = user["name"]
+        price = (user["bought items"][item_id]["percent"] / 100) * session_json["items"][item_id]["price"]
+        user_list[username] = price
+
+    return user_list
 
 def cursor_to_json(cursor):
     return dumps(list(cursor), indent = 2)

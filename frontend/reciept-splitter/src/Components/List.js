@@ -45,7 +45,7 @@ class List extends Component {
     index++;
     if (session_data.users) {
       session_data.users.forEach(user => {
-        users.push({name: user.username, id: user.id, num: index});
+        users.push({name: user.name, id: user.id, num: index});
         index++;
       });
     }
@@ -60,16 +60,17 @@ class List extends Component {
     if (!session_data.current_user == "") {
       session_data.current_user.items.forEach(item => {
         let item_matched = items.find(e => e.id == item.id);
-        item_matched.slider = item.percentage;
+        item_matched.slider = item.percent;
         item_matched.checked = true;
       });
     }
     index = 1;
     if (session_data.users) {
       session_data.users.forEach(user => {
-        user.items.forEach(item => {
-          let item_matched = items.find(e => e.id == item.id);
-          item_matched.otherPercentages.push({id: index, percentage: item.percentage});
+        user.bought_items.forEach(item => {
+          console.log(item);
+          let item_matched = items.find(e => e.id == item["Item ID"]);
+          item_matched.otherPercentages.push({id: index, percentage: item.percent});
         });
         index++;
       });  
@@ -111,29 +112,35 @@ class List extends Component {
   }
 
   confirm() {
-    /*
     let itemsToDb = [];
     this.state.items.forEach(item => {
       let newItem = {};
       newItem.id = item.id;
       newItem.name = item.name;
       newItem.price = item.price;
-      newItem.percentage = item.slider * item.percentage;
+      newItem.percentage = item.slider * item.percentage / 100;
       itemsToDb.push(newItem);
     });
     const user_token = JSON.parse(window.localStorage.getItem("token"));
+    
     let current_user = {};
     current_user.name = user_token.username;
     current_user.id = user_token.id;
     current_user.items = itemsToDb;
     current_user.session_id = window.localStorage.getItem("session_id");
     console.log(current_user);
-    axios.post("http://localhost:5000/add_user", current_user)
+
+    let allPaid = true;
+    this.state.items.forEach(item => {
+      if (!(item.percentage == 0 || item.slider == 100)) {
+        allPaid = false;
+      }
+    });
+    axios.post("http://localhost:5000/add_user", {current_user: current_user, allPaid: allPaid})
     .then(res => {
       console.log(res.data);
     })
     .catch(err => console.log(err));
-    */
     this.setState({isOpen: true});
   }
 
@@ -219,7 +226,7 @@ class List extends Component {
           isOpen={this.state.isOpen}
           onRequestClose={this.closeModal}>
             <div className="modal-inside">
-            You have succesfully confirmed you contribution! Feel free to stay and make changes to you confirmation!
+            You have succesfully confirmed your contribution! Feel free to stay and make changes to you confirmation!
                 <div className="check-img" />
             </div>         
         </Modal>     
