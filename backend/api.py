@@ -198,6 +198,7 @@ def add_user_to_session():
         print(request.get_json()['allPaid'])
     else:
         print("nothinggg")
+    return
 
 def update_connection_user_item(session_id, user, item, item_id, percentage):
     sessions.update_one({"id": session_id, "users": { "$elemMatch": { "name":user}}}, {"$push": {"users.$.bought_items": {"Item ID": item_id, "Name": item, "percent": percentage}}})

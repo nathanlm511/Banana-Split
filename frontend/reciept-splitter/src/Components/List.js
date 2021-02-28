@@ -225,10 +225,21 @@ class List extends Component {
           className="modal"
           isOpen={this.state.isOpen}
           onRequestClose={this.closeModal}>
+            {JSON.parse(window.localStorage.getItem("session_data")).host != JSON.parse(window.localStorage.getItem("token")).phone ?
+            
             <div className="modal-inside">
             You have succesfully confirmed your contribution! Feel free to stay and make changes to you confirmation!
                 <div className="check-img" />
-            </div>         
+            </div>  :
+
+            <div className="modal-inside">
+            Send out Venmo requests for everyone's confirmed price by pressing the button below.
+              <div className="confirm-button" onClick={this.finalConfirm}>
+                  FINAL CONFIRMATION
+                </div>
+            </div> 
+          
+            }       
         </Modal>     
       </div>
     );
