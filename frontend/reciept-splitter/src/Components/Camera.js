@@ -26,6 +26,7 @@ class Camera extends Component {
     axios.post("http://localhost:5000/test_image", formData)
     .then(res => {
       const userData = {items: res.data, username: userToken.username, num_users: 4, name: "Nathan's Reciept"};
+      console.log(userData);
       axios.post("http://localhost:5000/create_session", userData)
       .then(res => {
         console.log(res.data);        
@@ -41,11 +42,13 @@ class Camera extends Component {
   render() {
     return (
       <div className="camera">
-        <form onSubmit={this.handleSubmit} className="camera-form">
-         <input type="file" accept="image/*" capture="camera" ref={this.fileInput}></input>
-         <br></br>
-          <input type="submit"/>
-        </form>
+        <div className="card">
+          <form onSubmit={this.handleSubmit} className="camera-form">         
+          <input type="file" accept="image/*" capture="camera" ref={this.fileInput} className="photo-input"></input>
+          <br></br>
+            <input type="submit" className="photo-submit"/>
+          </form>
+        </div>
       </div>
     );
   }

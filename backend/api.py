@@ -116,6 +116,7 @@ def host_confirm_request():
 @app.route('/get_session', methods=['POST'])
 def get_session_data():
     id = request.json["id"]
+    id = int(id)
 
     return cursor_to_json(sessions.find({"id": id}))
 
@@ -130,8 +131,8 @@ def create_connection():
 
     for item in session_json['items']['all food']:
         #??? how to translate "items"
-        
-        add_item_to_session(session_id, item["name"], item["price"], item["id"])
+        print(item)
+        add_item_to_session(session_id, item["name"], item["total cost"], item_id)
         item_id += 1
     
     return cursor_to_json(sessions.find({"id": session_id}))
