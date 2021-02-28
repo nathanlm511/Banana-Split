@@ -122,18 +122,26 @@ class List extends Component {
       itemsToDb.push(newItem);
     });
     const user_token = JSON.parse(window.localStorage.getItem("token"));
+    
     let current_user = {};
     current_user.name = user_token.username;
     current_user.id = user_token.id;
     current_user.items = itemsToDb;
     current_user.session_id = window.localStorage.getItem("session_id");
     console.log(current_user);
-    axios.post("http://localhost:5000/add_user", current_user)
+
+    let allPaid = true;
+    this.state.items.forEach(item => {
+      if (!(item.percentage == 0 || item.slider == 100)) {
+        allPaid = false;
+      }
+    });
+    axios.post("http://localhost:5000/add_user", {current_user: current_user, allPaid: allPaid})
     .then(res => {
       console.log(res.data);
     })
     .catch(err => console.log(err));
-    // this.setState({isOpen: true});
+    this.setState({isOpen: true});
   }
 
   closeModal() {    
@@ -218,7 +226,7 @@ class List extends Component {
           isOpen={this.state.isOpen}
           onRequestClose={this.closeModal}>
             <div className="modal-inside">
-            You have succesfully confirmed you contribution! Feel free to stay and make changes to you confirmation!
+            You have succesfully confirmed your contribution! Feel free to stay and make changes to you confirmation!
                 <div className="check-img" />
             </div>         
         </Modal>     

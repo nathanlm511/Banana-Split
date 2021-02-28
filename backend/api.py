@@ -194,8 +194,8 @@ def add_user_to_session():
     
     
 
-    if (request.get_json()["current_user"]['allPaid']):
-        print(request.get_json()["current_user"]['allPaid'])
+    if (request.get_json()['allPaid']):
+        print(request.get_json()['allPaid'])
     else:
         print("nothinggg")
 
