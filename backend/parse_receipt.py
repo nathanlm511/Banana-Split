@@ -164,6 +164,13 @@ def parse_receipt(processed_image):
         total_read_cost += food['total cost']
     if not is_number(balance_due):
         balance_due = total_read_cost
+        
+    print("\n\nFood: price\n")
+    total_read_cost = 0
+    for food in receipt['all food']:
+        total_read_cost += food['total cost']
+        print(f"{food['name']}: ${food['total cost']}, x{food['num items']}, {food['food group']}")
+        
     
     return {"balance due": balance_due, "all food": foods}
 
