@@ -192,8 +192,6 @@ def add_user_to_session():
     for item in session_json["items"]:
         update_connection_user_item(int(session_json["session_id"]), session_json["name"], item["name"], item["id"], item["percentage"])
     
-    
-
     if (request.get_json()["current_user"]['allPaid']):
         print(request.get_json()["current_user"]['allPaid'])
     else:
@@ -214,7 +212,17 @@ def add_user_to_session(session_id, user_id, name):
     sessions.update_one({"id": session_id}, {"$push": {"users": {"user_id": user_id, "name": name, "bought_items": []}}}, upsert=True)
 
 def get_data_from_cursor(session_id):
-    cursor_to_json(sessions.find({"id": session_id}))
+    session_json = cursor_to_json(sessions.find({"id": session_id}))
+
+    user_list = []
+    item_id = 0
+
+    for user in session_json["users"]:
+        username = user["name"]
+        price = (user["bought items"][item_id]["percent"] / 100) * session_json["items"][item_id]["price"]
+        user_list[username] = price
+
+    return user_list
 
 def cursor_to_json(cursor):
     return dumps(list(cursor), indent = 2)
