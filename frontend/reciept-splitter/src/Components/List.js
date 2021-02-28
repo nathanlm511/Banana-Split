@@ -45,7 +45,7 @@ class List extends Component {
     index++;
     if (session_data.users) {
       session_data.users.forEach(user => {
-        users.push({name: user.username, id: user.id, num: index});
+        users.push({name: user.name, id: user.id, num: index});
         index++;
       });
     }
@@ -60,16 +60,17 @@ class List extends Component {
     if (!session_data.current_user == "") {
       session_data.current_user.items.forEach(item => {
         let item_matched = items.find(e => e.id == item.id);
-        item_matched.slider = item.percentage;
+        item_matched.slider = item.percent;
         item_matched.checked = true;
       });
     }
     index = 1;
     if (session_data.users) {
       session_data.users.forEach(user => {
-        user.items.forEach(item => {
-          let item_matched = items.find(e => e.id == item.id);
-          item_matched.otherPercentages.push({id: index, percentage: item.percentage});
+        user.bought_items.forEach(item => {
+          console.log(item);
+          let item_matched = items.find(e => e.id == item["Item ID"]);
+          item_matched.otherPercentages.push({id: index, percentage: item.percent});
         });
         index++;
       });  

@@ -101,7 +101,7 @@ def host_login():
     '''   
     
     # Return jsonified data
-    return_data_dict = {"id": "1234", "username": "my_username", "first_name": "first",
+    return_data_dict = {"id": "nathan1234", "username": "nathan_username", "first_name": "first",
                         "last_name": "last", "display_name": "First last", "phone": "123-456-1234",
                         "profile_picture_url": "google.com", "about": "about me", 
                         "date_joined": "date_joined", "is_group": True, "is_active": True}
