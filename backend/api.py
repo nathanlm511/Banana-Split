@@ -146,15 +146,17 @@ def add_item_to_user():
 @app.route('/add_user', methods=['POST'])
 def add_user_to_session():
     session_json = request.get_json()
-    add_user_to_session(int(session_json["session_id"]), session_json["name"])
+    if (db.mycollection.count_documents({"users" : {"user_id": session_json["user_id"]}}, limit = 1)):
+        for item in session_json["items"]:
+            sessions.update_one({"id": session_id, "users": { "bought_items": { "$elemMatch": {"id": session_json["items"]["ID"]}}}}, {"$set": {"users": {"name": name, "bought_items": []}}}, upsert=True)
+    else:
+        add_user_to_session(session_json["id"], session_json["user_id"], session_json["username"])
 
-    for item in session_json["items"]:
-        update_connection_user_item(int(session_json["session_id"]), session_json["name"], item["name"], item["percentage"])
-    
+        for item in session_json["items"]:
+            update_connection_user_item(session_json["session_id"], session_json["name"], item["name"], item["percentage"])
 
-
-def update_connection_user_item(session_id, user, item, percentage):
-    sessions.update_one({"id": session_id, "users": { "$elemMatch": { "name":user}}}, {"$push": {"users.$.bought_items": {"Name": item, "percent": percentage}}})
+def update_connection_user_item(session_id, user, item, item_id,percentage):
+    sessions.update_one({"id": session_id, "users": { "$elemMatch": { "name":user}}}, {"$push": {"users.$.bought_items": {"Item ID": item_id, "Name": item, "percent": percentage}}})
 
 def create_session_on_db(hostname, name):
     id = sessions.count_documents({}) + 1
@@ -164,11 +166,8 @@ def create_session_on_db(hostname, name):
 def add_item_to_session(session_id, name, price, id):
     sessions.update_one({"id": session_id}, {"$push": {"items": {"id": id, "name": name, "price": price}}}) 
 
-def add_user_to_session(session_id, name):
-    sessions.update_one({"id": session_id}, {"$push": {"users": {"name": name, "bought_items": []}}}, upsert=True)
-
-def add_item_to_user(session_id, user, item):
-    return
+def add_user_to_session(session_id, user_id, name):
+    sessions.update_one({"id": session_id}, {"$push": {"users": {"user_id": user_id, "name": name, "bought_items": []}}}, upsert=True)
 
 def cursor_to_json(cursor):
     return dumps(list(cursor), indent = 2)
