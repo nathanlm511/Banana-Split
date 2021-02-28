@@ -144,16 +144,14 @@ def friend_login():
 # After everyone has filled out their forms
 def host_confirm_request(session_id):
     
-    names_dict = get_data_from_cursor(session_id)
+    names_dict, num = get_data_from_cursor(session_id)
     # num = "+13303099014"
-    num = names_dict['host num']
     link_to_page = "https://something"
     message = "Everyone has confirmed their prices for your receipt! Request your money here: " + link_to_page
     twilio_client.messages.create(to=num, 
                         from_="+13023004884", 
                         body=message)
-    
-    
+
     for username in names_dict:
         request_amount = names_dict[username]
         # user = venmo.user.get_user_by_username(username)
@@ -245,9 +243,9 @@ def get_data_from_cursor(session_id):
         price = (user["bought_items"][item_id]["percent"] / 100) * session_json["items"][item_id]["price"]
         user_list[username] = price
     
-    user_list['host num'] = session_json["host"]
+    host_num = session_json["host"]
 
-    return user_list
+    return user_list, host_num
 
 def cursor_to_json(cursor):
     return dumps(list(cursor), indent = 2)
