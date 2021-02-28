@@ -74,6 +74,15 @@ def post_image():
 # When host starts session. Can be after taking and processing picture of receipt
 @app.route('/host_login', methods=['POST'])
 def host_login():
+    if request.method == 'OPTIONS':
+        print("hello options")
+        response = app.response_class(
+            response="working fine",
+            status=200
+        )        
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
     venmo_user = request.json["username"]
     venmo_pass = request.json["password"]
     try:
@@ -85,7 +94,7 @@ def host_login():
             mimetype='application/json',
             status=413
         )
-        return response
+        return "incorrect"
         
     # Make venmo User object for host
     host_venmo = Client(access_token=access_token)
@@ -97,14 +106,13 @@ def host_login():
                         "profile_picture_url": host.profile_picture_url, "about": host.about, 
                         "date_joined": host.date_joined, "is_group": host.is_group, "is_active": host.is_active}
 
-    '''   
+    '''  
     
     # Return jsonified data
     return_data_dict = {"id": "nathan1234", "username": "nathan_username", "first_name": "first",
                         "last_name": "last", "display_name": "First last", "phone": "+15409052428",
                         "profile_picture_url": "google.com", "about": "about me", 
                         "date_joined": "date_joined", "is_group": True, "is_active": True}
-                        
                         '''
 
     response = json.dumps(return_data_dict)
