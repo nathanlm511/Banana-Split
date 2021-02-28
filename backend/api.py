@@ -158,10 +158,10 @@ def create_session_on_db(hostname, num_users, name):
     return id
 
 def add_item_to_session(session_id, name, price, id):
-    sessions.update_one({"id": session_id}, {"$push": {"items": {"id": id, "Name": name, "Price": price}}}) 
+    sessions.update_one({"id": session_id}, {"$push": {"items": {"id": id, "name": name, "price": price}}}) 
 
 def add_user_to_session(session_id, name):
-    sessions.update_one({"id": session_id}, {"$push": {"users": {"Name": name, "bought_items": []}}})
+    sessions.update_one({"id": session_id}, {"$push": {"users": {"name": name, "bought_items": []}}})
     sessions.update_one({"id": session_id}, { "$inc": {"num_users": 1}})
 
 def add_item_to_user(session_id, user, item):

@@ -21,21 +21,21 @@ class List extends Component {
   componentWillMount() {
     const session_data = JSON.parse(window.localStorage.getItem("session_data"));
     const user_token = JSON.parse(window.localStorage.getItem("token"));
-    if (session_data.cuurent_user == "") {
-      // already done
-    }
-    else {
-      // current user 
-    }
+    
+    console.log(session_data.items);
+    console.log(session_data);
+
     let users = [];
     let items = [];
     let index = 0;
     users.push({name: user_token.username, id: user_token.id, num: index});
     index++;
-    session_data.users.forEach(user => {
-      users.push({name: user.username, id: user.id, num: index});
-      index++;
-    });
+    if (session_data.users) {
+      session_data.users.forEach(user => {
+        users.push({name: user.username, id: user.id, num: index});
+        index++;
+      });
+    }
     session_data.items.forEach(item => {
       let newItem = item;
       newItem.checked = false;
@@ -51,13 +51,15 @@ class List extends Component {
       });
     }
     index = 1;
-    session_data.users.forEach(user => {
-      user.items.forEach(item => {
-        let item_matched = items.find(e => e.id == item.id);
-        item_matched.otherPercentages.push({id: index, percentage: item.percentage});
-      });
-      index++;
-    });    
+    if (session_data.users) {
+      session_data.users.forEach(user => {
+        user.items.forEach(item => {
+          let item_matched = items.find(e => e.id == item.id);
+          item_matched.otherPercentages.push({id: index, percentage: item.percentage});
+        });
+        index++;
+      });  
+    }  
     items.forEach(item => {
       let percentageSum = 0;
       item.otherPercentages.forEach(percentage => percentageSum += percentage.percentage);
@@ -128,7 +130,6 @@ class List extends Component {
             )            
           })}
         </div>
-        <div className="legend-whitespace" />
         <div className="reciept-container">
           {this.state.items.map((item) => {
             let leftTotal = item.percentage;
