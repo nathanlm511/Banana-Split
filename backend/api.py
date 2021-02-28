@@ -149,7 +149,7 @@ def host_confirm_request(session_id):
     num = names_dict['host num']
     link_to_page = "https://something"
     message = "Everyone has confirmed their money for your receipt! Request your money here: " + link_to_page
-    client.messages.create(to=num, 
+    twilio_client.messages.create(to=num, 
                         from_="+13023004884", 
                         body=message)
     
@@ -162,7 +162,7 @@ def request_money():
         request_amount = names_dict[username]
         user = venmo.user.get_user_by_username(username)
         # venmo.payment.request_money(request_amount, "Requested by Banana Split App!", target_user=user)
-        print(f"Request sent to {username}")
+        print(f"Requested {request_amount} from {username}")
 
 @app.route('/get_session', methods=['POST'])
 def get_session_data():
