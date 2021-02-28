@@ -81,7 +81,7 @@ def parse_receipt(processed_image):
                         if first_word:
                             food_name += word
                             first_word = False
-                        else:
+                        elif word != 'A' and word != 'x' and word != 'Ax':
                             food_name += ' ' + word
                     else: # word is a number
                         food_cost = float(word)
