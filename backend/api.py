@@ -149,7 +149,7 @@ def host_confirm_request(session_id):
     num = names_dict['host num']
     link_to_page = "https://something"
     message = "Everyone has filled up their shopping carts! Request your money here: " + link_to_page
-    client.messages.create(to=num, 
+    twilio_client.messages.create(to=num, 
                         from_="+13023004884", 
                         body=message)
     
