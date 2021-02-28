@@ -33,14 +33,19 @@ class Login extends Component {
       password: this.state.password})
       .then(res => {
         window.localStorage.setItem("token", JSON.stringify(res.data));
-        let session_id = window.localStorage.getItem("session_id");
-        axios.post("http://localhost:5000/get_session", {id: session_id})
-          .then(res => {
-            console.log(res.data);
-            window.localStorage.setItem("session_data", JSON.stringify(res.data[0]));
-            window.location = "/list";
-          })
-          .catch(err => console.log(err));
+        if (window.localStorage.getItem("session_id") == "login") {
+          window.location = "/camera";
+        }
+        else {
+          let session_id = window.localStorage.getItem("session_id");
+          axios.post("http://localhost:5000/get_session", {id: session_id})
+            .then(res => {
+              console.log(res.data);
+              window.localStorage.setItem("session_data", JSON.stringify(res.data[0]));
+              window.location = "/list";
+            })
+            .catch(err => console.log(err));
+        }        
       })
       .catch(err => console.log(err));
   }
