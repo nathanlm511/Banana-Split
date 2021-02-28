@@ -4,8 +4,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     background-color: #f2f9ff;
+    overflow: auto;
 }
 
 .reciept-container {
@@ -163,17 +163,11 @@ input[type=range].slider::-webkit-slider-thumb {
     display: flex;
     flex-direction: row;
     width: 80%;
-    height: 20%;
-    position: fixed;
-    top: 10%;
-    left: 10%;
+    height: 20vh;
     align-items: center;
     justify-content: center;
     background-color: white;
-}
-
-.legend-whitespace {
-    height: 20%;
+    margin: 25px;
 }
 
 .user-container {
