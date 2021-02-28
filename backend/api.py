@@ -131,7 +131,6 @@ def create_connection():
 
     for item in session_json['items']['all food']:
         #??? how to translate "items"
-        print(item)
         add_item_to_session(session_id, item["name"], item["total cost"], item_id)
         item_id += 1
     
@@ -146,16 +145,15 @@ def add_item_to_user():
 @app.route('/add_user', methods=['POST'])
 def add_user_to_session():
     session_json = request.get_json()
-    if (db.mycollection.count_documents({"users" : {"user_id": session_json["id"]}}, limit = 1)):
-        for item in session_json["items"]:
-            sessions.update_one({"id": session_id, "users": { "bought_items": { "$elemMatch": {"id": session_json["items"]["ID"]}}}}, {"$set": {"users": {"name": name, "bought_items": []}}}, upsert=True)
-    else:
-        add_user_to_session(int(session_json["session_id"]), session_json["id"], session_json["name"])
+    if (sessions.count_documents({"users" : {"$elemMatch" : {"user_id": {"$eq": session_json["id"]}}}}, limit = 1)):
+       sessions.update_one({"id": int(session_json["session_id"])}, {"$pull": {"users" : {"user_id": {"$eq": session_json["id"]}}}})
+    
+    add_user_to_session(int(session_json["session_id"]), session_json["id"], session_json["name"])
 
-        for item in session_json["items"]:
-            update_connection_user_item(int(session_json["session_id"]), session_json["name"], item["name"], item["id"], item["percentage"])
+    for item in session_json["items"]:
+        update_connection_user_item(int(session_json["session_id"]), session_json["name"], item["name"], item["id"], item["percentage"])
 
-def update_connection_user_item(session_id, user, item, item_id,percentage):
+def update_connection_user_item(session_id, user, item, item_id, percentage):
     sessions.update_one({"id": session_id, "users": { "$elemMatch": { "name":user}}}, {"$push": {"users.$.bought_items": {"Item ID": item_id, "Name": item, "percent": percentage}}})
 
 def create_session_on_db(hostname, name):
