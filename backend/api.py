@@ -113,9 +113,10 @@ def friend_login():
 def host_confirm_request():
     pass
 
-@app.route('/get_session', methods=['GET'])
+@app.route('/get_session', methods=['POST'])
 def get_session_data():
     id = request.json["id"]
+    id = int(id)
 
     return cursor_to_json(sessions.find({"id": id}))
 

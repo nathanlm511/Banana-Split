@@ -4,15 +4,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #f2f9ff;
-    overflow: auto;
+    background-color: #fffbee;
+    overflow-y: scroll;
 }
 
 .reciept-container {
-    width: 80%;
+    width: 70%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    top: 30vh;  
+    height: 70vh;
 }
 
 .item-container {
@@ -35,6 +38,7 @@
     justify-content: center;
     background-color: white;
     position: relative;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.171);
 }
 
 .uncheck {
@@ -46,8 +50,8 @@
     position: relative;
     border-radius: 100px;
     background-color: #FFF;
-    border: 2px solid #00EA90;
-    box-shadow: 0px 0px 0px 0px #00EA90 inset;
+    border: 2px solid lightblue;;
+    box-shadow: 0px 0px 0px 0px lightblue inset;
 }
 
 .check {
@@ -58,16 +62,16 @@
     align-items: center;
     position: relative;
     border-radius: 100px;
-    background-color: #00EA90;
-    border: 2px solid #00EA90;
-    box-shadow: 0px 0px 0px 0px #00EA90 inset;
+    background-color: lightblue;
+    border: 2px solid lightblue;
+    box-shadow: 0px 0px 0px 0px lightblue inset;
 }
 
 .slider {
     position: absolute;
     top: 0px;
     left: 0px;
-    z-index: 1000;
+    z-index: 500;
 }
 
 .no-slider {
@@ -75,7 +79,7 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    z-index: 1000;
+    z-index: 500;
 }
 
 .user-highlight {
@@ -83,7 +87,7 @@
     top: 0px;
     left: 0px;
     height: 100%;
-    opacity: 0.4;
+    opacity: 0.2;
 }
 
 .other-highlight {
@@ -94,16 +98,20 @@
 }
 
 .highlight-0 {
-    background-image: url("../Images/red.jpg");
+    background-color: lightblue;
+    border-radius: 10px;
 }
 .highlight-1 {
     background-image: url("../Images/green.jpg");
+    border-radius: 10px;
 }
 .highlight-2 {
     background-image: url("../Images/blue.jpg");
+    border-radius: 10px;
 }
 .highlight-3 {
     background-image: url("../Images/yellow.jpeg");
+    border-radius: 10px;
 }
 
 input[type=range] {
@@ -141,6 +149,8 @@ input[type=range].slider::-webkit-slider-thumb {
     cursor: pointer;
     margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
     box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+    background-image: url("../Images/blue.jpg");
+    background-size: cover;
 }
 
 
@@ -162,12 +172,32 @@ input[type=range].slider::-webkit-slider-thumb {
 .legend-container {
     display: flex;
     flex-direction: row;
-    width: 80%;
-    height: 20vh;
     align-items: center;
     justify-content: center;
-    background-color: white;
     margin: 25px;
+}
+
+.list-header-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.637);
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 150px;
+    margin: 25px;
+    position: fixed;
+    z-index: 1001;
+}
+
+.high-z {
+    width: 100%;
+    height: 27vh;
+    background-color: #d7c0a2;
+    position: fixed;
+    z-index: 1000;
+    box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
 }
 
 .user-container {
@@ -176,11 +206,100 @@ input[type=range].slider::-webkit-slider-thumb {
    align-items: center;
    justify-content: center;
    height: 50%;
-   width: 25%
 }
 
 .circle {
     height: 25px;
     width: 25px;
     border-radius: 100px;
+    margin-left: 10px;
+}
+
+.list-title {
+    font-size:70px;
+}
+
+.username-legend {
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.item-name {
+    font-size: 30px;
+    left: 10%;
+    position: absolute;
+}
+
+.item-price {
+    font-size: 30px;
+    right: 10%;
+    position: absolute;
+}
+
+.item-percentage {
+    width: 9%;
+    display: flex;
+    flex-direction: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.item-percentage-green {
+    width: 9%;
+    display: flex;
+    flex-direction: center;
+    justify-content: center;
+    font-size: 30px;
+    border: 1px solid #e0f0e3;
+    border-radius: 10px;
+    background-color: #e8f4ea;
+}
+
+.list-body-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;  
+}
+
+.confirm-column {
+
+}
+
+.confirm-card {
+    top: 30vh;
+    left: 70vw;
+    height: 60vh;
+    width: 25vw;
+    background-color: white;
+    position: fixed;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.171);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.confirm-price {
+    font-size: 25px;
+}
+
+.confirm-button {    
+    border: none;
+    outline: none;
+    display:inline-block;
+    padding:0.7em 1.4em;
+    margin:0 0.3em 0.3em 0;
+    border-radius:0.15em;
+    box-sizing: border-box;
+    text-decoration:none;
+    font-family: 'Montserrat', sans-serif;
+    text-transform:uppercase;
+    font-weight:400;
+    color:#8a9a5b;
+    background-color:#e8f4ea;
+    box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+    text-align:center;
+    position:relative;
+    font-size: 30px;
 }

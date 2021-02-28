@@ -8,15 +8,17 @@
     background-color: #f2f9ff;
 }
 
-.camera-button {
-    background-color: bisque;
-    height: 50%;
-    width: 25%;
-}
-
 .camera-form {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.photo-input {    
+  font-family: 'Quicksand', sans-serif;
+}
+
+.photo-submit {
+    font-family: 'Quicksand', sans-serif;
 }

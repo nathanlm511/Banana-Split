@@ -41,11 +41,13 @@ class Camera extends Component {
   render() {
     return (
       <div className="camera">
-        <form onSubmit={this.handleSubmit} className="camera-form">
-         <input type="file" accept="image/*" capture="camera" ref={this.fileInput}></input>
-         <br></br>
-          <input type="submit"/>
-        </form>
+        <div className="card">
+          <form onSubmit={this.handleSubmit} className="camera-form">         
+          <input type="file" accept="image/*" capture="camera" ref={this.fileInput} className="photo-input"></input>
+          <br></br>
+            <input type="submit" className="photo-submit"/>
+          </form>
+        </div>
       </div>
     );
   }

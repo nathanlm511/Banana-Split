@@ -33,34 +33,14 @@ class Login extends Component {
       password: this.state.password})
       .then(res => {
         window.localStorage.setItem("token", JSON.stringify(res.data));
-        /*
-        axios.post("http://localhost:5000/get_session")
-          .then(sessionData => {
-            // window.location = 
+        let session_id = window.localStorage.getItem("session_id");
+        axios.post("http://localhost:5000/get_session", {id: session_id})
+          .then(res => {
+            console.log(res.data);
+            window.localStorage.setItem("session_data", JSON.stringify(res.data[0]));
+            window.location = "/list";
           })
           .catch(err => console.log(err));
-        */
-        let session_id = window.localStorage.getItem("session_id");
-        // {Name: "Sam", Items: [{Name: "Apple", ID: 1, price: 10, Percentage:}, {Name: "Bread", ID: 2, price: 15}]},
-        const session_data = {
-          name: "My Grocery List",
-          host: "Nathan", 
-          current_user: "",
-          //current_user: {name: "Sam", items: [{name: "Apple", id: 1, price: 10, percentage: 17}, {name: "Bread", id: 2, price: 15, percentage: 36}],
-            //            id: "7482", username: "Justv"},
-          users: [
-                  {name: "Justin", items: [{name: "Chai", id: 3, price: 8, percentage: 50}, {name: "Dates", id: 4, price: 6, percentage: 100}],
-                   id: "7482", username: "Justv"},
-                  {name: "Nathan", items: [{name: "Bread", id: 2, price: 15, percentage: 25}, {name: "Chai", id: 3, price: 8, percentage: 25}],
-                  id: "0260", username: "NatM"}],
-          items: [{name: "Apple", id: 1, price: 10},
-                  {name: "Bread", id: 2, price: 15},
-                  {name: "Chai", id: 3, price: 8},
-                  {name: "Dates", id: 4, price: 6}]
-        }
-
-        window.localStorage.setItem("session_data", JSON.stringify(session_data));
-        window.location = "/list";
       })
       .catch(err => console.log(err));
   }
@@ -72,37 +52,49 @@ class Login extends Component {
   render() {
     return (
       <div className="login">
+        <div className="title">
+          <div className="title-intro">Welcome to</div>
+          <div className="title-body-container">
+            <div className="title-body"><span style={{"fontWeight": 400}}>Banana</span> Split</div>
+            <div className="title-image"/>
+          </div>
+        </div>
         <div className="card">
+          <div className="login-title">Authenticate with Venmo:</div>
           <form onSubmit={this.handleSubmit}>
-            <div className="label">
-              Username: 
-            </div>
-            <div className="field">
-              <input
-                  className="username-box"
-                  name="username"
+            <div className="username-container">
+              <div className="label">
+                Username: 
+              </div>
+              <div className="field">
+                <input
+                    className="username-box"
+                    name="username"
+                    type="text"
+                    value={this.state.username}
+                    onChange={this.handleInputChange} 
+                    autoComplete="off"/>
+              </div>
+            </div>  
+            <br></br>
+            <div className="password-container">
+              <div className="label">
+                Password: 
+              </div>   
+              <div className="field">
+                <input
+                  className="password-box"
+                  name="password"
                   type="text"
-                  value={this.state.username}
+                  value={this.state.password}
                   onChange={this.handleInputChange} 
                   autoComplete="off"/>
-            </div>    
-            <br></br>    
-            <div className="label">
-              Password: 
+                </div>       
             </div>   
-            <div className="field">
-              <input
-                className="password-box"
-                name="password"
-                type="text"
-                value={this.state.password}
-                onChange={this.handleInputChange} 
-                autoComplete="off"/>
-              </div>  
-              <br></br>    
-              <div className="login-button-row" >
-                <input type="submit" value="Login" className="login-button"/>
-              </div>       
+            <br></br> 
+            <div className="login-button-row" >
+              <input type="submit" value="Login" className="login-button"/>
+            </div>  
           </form>        
         </div>
       </div>
