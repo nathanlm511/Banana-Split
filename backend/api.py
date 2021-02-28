@@ -143,13 +143,22 @@ def friend_login():
 # After everyone has filled out their forms
 @app.route('/host_confirm_request', methods=['POST'])
 def host_confirm_request():
-    # num = "+13303099014"
-    num = "+15409052428"
-    link_to_page = "https://something"
-    message = "Everyone has filled up their shopping carts! Request your money here: " + link_to_page
-    client.messages.create(to=num, 
-                        from_="+13023004884", 
-                        body=message)
+
+    names_dict = get_usernames()
+    for username in names_dict:
+        request_amount = names_dict[username]
+        user = venmo.user.get_user_by_username(username)
+        venmo.payment.request_money(request_amount, "Requested by Banana Split App!", target_user=user)
+        print(f"Request sent to {username}")
+    
+    # # num = "+13303099014"
+    # num = "+15409052428"
+    # link_to_page = "https://something"
+    # message = "Everyone has filled up their shopping carts! Request your money here: " + link_to_page
+    # client.messages.create(to=num, 
+    #                     from_="+13023004884", 
+    #                     body=message)
+    pass
 
 @app.route('/get_session', methods=['POST'])
 def get_session_data():
