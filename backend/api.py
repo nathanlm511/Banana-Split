@@ -129,9 +129,10 @@ def create_connection():
     session_id = create_session_on_db(session_json["name"], session_json["name"])
     #username, number of users, name
 
-    for item in session_json['items']:
+    for item in session_json['items']['all food']:
         #??? how to translate "items"
-        add_item_to_session(session_id, item["name"], item["price"], item["id"])
+        print(item)
+        add_item_to_session(session_id, item["name"], item["total cost"], item_id)
         item_id += 1
     
     return cursor_to_json(sessions.find({"id": session_id}))

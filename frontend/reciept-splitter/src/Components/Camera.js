@@ -26,6 +26,7 @@ class Camera extends Component {
     axios.post("http://localhost:5000/test_image", formData)
     .then(res => {
       const userData = {items: res.data, username: userToken.username, num_users: 4, name: "Nathan's Reciept"};
+      console.log(userData);
       axios.post("http://localhost:5000/create_session", userData)
       .then(res => {
         console.log(res.data);        
