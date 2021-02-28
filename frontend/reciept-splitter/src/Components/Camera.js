@@ -25,12 +25,13 @@ class Camera extends Component {
     formData.append('file', imageFile);
     axios.post("http://localhost:5000/test_image", formData)
     .then(res => {
-      const userData = {items: res.data, username: userToken.username, num_users: 4, name: "Nathan's Reciept"};
+      const userData = {items: res.data, username: userToken.username, num_users: 4, name: "Nathan's Reciept", host: userToken.phone};
       console.log(userData);
       axios.post("http://localhost:5000/create_session", userData)
       .then(res => {
         console.log(res.data);        
-        window.localStorage.setItem("session_data", JSON.stringify(res.data[0]));
+        window.localStorage.setItem("session_data", JSON.stringify(res.data[0]));        
+        window.localStorage.setItem("session_id", JSON.stringify(res.data[0].id));
         window.location = "/list";
       })
       .catch(err => console.log(err));

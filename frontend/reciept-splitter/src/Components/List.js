@@ -116,6 +116,11 @@ class List extends Component {
     current_user.items = itemsToDb;
     current_user.session_id = window.localStorage.getItem("session_id");
     console.log(current_user);
+    axios.post("http://localhost:5000/add_user", current_user)
+    .then(res => {
+      console.log(res.data);
+    })
+    .catch(err => console.log(err));
   }
 
   render() {
@@ -129,6 +134,7 @@ class List extends Component {
         <div className="high-z">
         </div>
         <div className="list-header-container">
+          <div className="session-link"></div>
           <div className="list-title">
             Nathan's Grocery List
           </div>
@@ -165,7 +171,7 @@ class List extends Component {
                     {item.name}
                   </div>
                   <div className="item-price">
-                    {item.price.toFixed(2) + " $"}
+                    {"$" + item.price.toFixed(2)}
                   </div>
                 </div>
                 <div className={Math.round(item.slider * item.percentage / 100) == 100 ? "item-percentage-green" : "item-percentage"}>
@@ -177,9 +183,9 @@ class List extends Component {
           <div className="confirm-column">
             <div className="confirm-card">            
               <div className="confirm-price">
-                {"Your total contribution is: " + (this.state.items.reduce((accumulator, item) => (accumulator) + (item.price * item.slider / 100), 0)).toFixed(2) + "$"}
+                {"Your total contribution is: $" + (this.state.items.reduce((accumulator, item) => (accumulator) + (item.price * item.slider / 100), 0)).toFixed(2)}
                 <br></br>
-                {"Out of a total of: " + this.state.totalPrice.toFixed(2) + "$"}
+                {"Out of a total of: $" + this.state.totalPrice.toFixed(2)}
                 <br></br>
                 {"You have a contribution of: " + ((this.state.items.reduce((accumulator, item) => (accumulator) + (item.price * item.slider / 100), 0)) / this.state.totalPrice * 100).toFixed(2) + "%"}
               </div>

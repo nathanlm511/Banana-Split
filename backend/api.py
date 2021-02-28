@@ -146,10 +146,10 @@ def add_item_to_user():
 @app.route('/add_user', methods=['POST'])
 def add_user_to_session():
     session_json = request.get_json()
-    add_user_to_session(session_json["id"], session_json["username"])
+    add_user_to_session(int(session_json["session_id"]), session_json["name"])
 
     for item in session_json["items"]:
-        update_connection_user_item(session_json["session_id"], session_json["name"], item["name"], item["percentage"])
+        update_connection_user_item(int(session_json["session_id"]), session_json["name"], item["name"], item["percentage"])
     
 
 
@@ -165,7 +165,7 @@ def add_item_to_session(session_id, name, price, id):
     sessions.update_one({"id": session_id}, {"$push": {"items": {"id": id, "name": name, "price": price}}}) 
 
 def add_user_to_session(session_id, name):
-    sessions.replace_one({"id": session_id}, {"$push": {"users": {"name": name, "bought_items": []}}}, upsert=True)
+    sessions.update_one({"id": session_id}, {"$push": {"users": {"name": name, "bought_items": []}}}, upsert=True)
 
 def add_item_to_user(session_id, user, item):
     return
