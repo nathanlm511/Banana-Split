@@ -19,11 +19,17 @@ class Camera extends Component {
   handleSubmit(e) {
     //alert("test");
     const imageFile = this.fileInput.current.files[0]; 
+    const userToken = JSON.parse(window.localStorage.getItem("token"))
+    console.log(userToken);
+    const userData = {username: userToken.username, num_users: 4, }
+    console.log(userData);
+    return;
+
     var formData = new FormData();
     formData.append('file', imageFile);
     axios.post("http://localhost:5000/test_image", formData)
     .then(data => {
-
+      console.log(data);
     })
     .catch(err => console.log(err));
     e.preventDefault();
