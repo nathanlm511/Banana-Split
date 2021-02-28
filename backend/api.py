@@ -101,7 +101,8 @@ def host_confirm_request():
 
 #app.run()
 
-def create_connection(hostname, items, num_users, name):\
+@app.route('/create_session', methods=['POST'])
+def create_connection(hostname, items, num_users, name):
     item_id = 0
     uuid = create_session_on_db(hostname, num_users, name)
     for (item in items):
@@ -110,20 +111,31 @@ def create_connection(hostname, items, num_users, name):\
         id += 1
     return cursor_to_json(sessions.find({"uuid": uuid}))
 
+def update_connection_user_item(session_id, user, item, percentage):
+    json_data = cursor_to_json(sessions.find({"uuid": uuid}))
+
+    #unsure if we need?
+    json_object = json.loads(json_data)
+
+    for users in json_object["users"]
+        
+
+
+
+
 def create_session_on_db(username, num_users, name):
     uuid = sessions.count() + 1
     sessions.insert_one([{"uuid": uuid, "name:" name, "num_users":num_users, "host": username, "items": [], "users": []}])
     return uuid
 
 def add_item_to_session(session_id, name, price, id):
-    #??? IDS
     sessions.update({"uuid": session_id}, {"$push": {"items": {"id": id "Name": name, "Price": price}}}) 
 
 def add_user_to_session(session_id, name):
     sessions.update({"uuid": session_id}, {"$push": {"users": {"Name": name, "bought_items": []}}})
     sessions.update({"uuid": session_id}, { "$inc": {"num_users": 1}})
 
-def add_item_to_user(hostname)
+def add_item_to_user(session_id, user, item):
 
 def cursor_to_json(cursor):
     return dumps(list(cursor), indent = 2)
