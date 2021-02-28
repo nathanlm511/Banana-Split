@@ -303,3 +303,13 @@ input[type=range].slider::-webkit-slider-thumb {
     position:relative;
     font-size: 30px;
 }
+
+
+.confirm-button:active {
+    top:0.1em;
+}
+
+.session-link {
+    position: relative;
+    top: 10px;
+}

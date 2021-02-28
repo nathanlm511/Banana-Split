@@ -9,6 +9,7 @@ class Camera extends Component {
     super();
     this.state = {}
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.updateFileName = this.updateFileName.bind(this);
     this.fileInput = React.createRef();
   }
 
@@ -40,14 +41,28 @@ class Camera extends Component {
     e.preventDefault();
   }
 
+  updateFileName() {
+    if (this.fileInput.current) {
+      this.setState({filename: this.fileInput.current.files[0].name});      
+    }
+  }
+
   render() {
     return (
       <div className="camera">
         <div className="card">
-          <form onSubmit={this.handleSubmit} className="camera-form">         
-          <input type="file" accept="image/*" capture="camera" ref={this.fileInput} className="photo-input"></input>
+          <div className="instructions">
+            Take or choose a picture of a reciept and let our AI scan the image for all of your items!
+          </div>
+          <form onSubmit={this.handleSubmit} className="camera-form">   
+          <div class='file-input'>
+            <input id="photo-id" type="file" accept="image/*" capture="camera" ref={this.fileInput} className="photo-input" onChange={this.updateFileName}></input>
+            <span className='button'>Choose</span>
+            <label className='label' for="photo-id">{this.state.filename ? this.state.filename : "No file chosen"}</label>
+          </div>     
+          
           <br></br>
-            <input type="submit" className="photo-submit"/>
+            <input type="submit" className="photo-submit" value="Magic!"/>
           </form>
         </div>
       </div>

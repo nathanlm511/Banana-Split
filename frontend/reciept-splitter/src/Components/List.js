@@ -134,10 +134,10 @@ class List extends Component {
         <div className="high-z">
         </div>
         <div className="list-header-container">
-          <div className="session-link"></div>
           <div className="list-title">
             Nathan's Grocery List
           </div>
+          <div className="session-link">{"Session URL: http://localhost:5000/login/" + window.localStorage.getItem("session_id")}</div>
           <div className="legend-container">
             {this.state.users.map((user) => {
               return (
