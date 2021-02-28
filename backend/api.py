@@ -170,7 +170,6 @@ def add_item_to_user(session_id, user, item):
 def cursor_to_json(cursor):
     return dumps(list(cursor), indent = 2)
 
-    
 app.run()
 
         
