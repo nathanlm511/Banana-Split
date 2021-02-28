@@ -142,15 +142,27 @@ def friend_login():
 
 
 # After everyone has filled out their forms
-@app.route('/host_confirm_request', methods=['POST'])
-def host_confirm_request():
+def host_confirm_request(session_id):
+    
+    names_dict = get_data_from_cursor(session_id)
     # num = "+13303099014"
-    num = "+15409052428"
+    num = names_dict['host num']
     link_to_page = "https://something"
     message = "Everyone has filled up their shopping carts! Request your money here: " + link_to_page
     client.messages.create(to=num, 
                         from_="+13023004884", 
                         body=message)
+    
+    
+@app.route('/request_money', methods=['POST'])
+def request_money():
+
+    names_dict = get_data_from_cursor(session_id)
+    for username in names_dict:
+        request_amount = names_dict[username]
+        user = venmo.user.get_user_by_username(username)
+        venmo.payment.request_money(request_amount, "Requested by Banana Split App!", target_user=user)
+        print(f"Request sent to {username}")
 
 @app.route('/get_session', methods=['POST'])
 def get_session_data():
@@ -195,7 +207,8 @@ def add_user_to_session():
     
 
     if (request.get_json()['allPaid']):
-        print(request.get_json()['allPaid'])
+        # print(request.get_json()['allPaid'])
+        host_confirm_request(int(session_json["session_id"]))
     else:
         print("nothinggg")
     return
@@ -215,7 +228,19 @@ def add_user_to_session(session_id, user_id, name):
     sessions.update_one({"id": session_id}, {"$push": {"users": {"user_id": user_id, "name": name, "bought_items": []}}}, upsert=True)
 
 def get_data_from_cursor(session_id):
-    cursor_to_json(sessions.find({"id": session_id}))
+    session_json = cursor_to_json(sessions.find({"id": session_id}))
+
+    user_list = {}
+    item_id = 0
+
+    for user in session_json["users"]:
+        username = user["name"]
+        price = (user["bought items"][item_id]["percent"] / 100) * session_json["items"][item_id]["price"]
+        user_list[username] = price
+    
+    user_list['host num'] = session_json["hostname"]
+
+    return user_list
 
 def cursor_to_json(cursor):
     return dumps(list(cursor), indent = 2)
