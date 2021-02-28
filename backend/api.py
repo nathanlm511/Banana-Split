@@ -34,8 +34,8 @@ def home():
 @app.route('/test_image', methods=['POST'])
 def post_image():
     """ post image and return the response """ 
-    #filestr = request.files['file']
-    #npimg = np.fromfile(filestr, np.uint8)
+    filestr = request.files['file']
+    npimg = np.fromfile(filestr, np.uint8)
     img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
     # if image has been preprocessed
     return parse_receipt(img)
@@ -144,7 +144,7 @@ def friend_login():
 @app.route('/host_confirm_request', methods=['POST'])
 def host_confirm_request():
     # num = "+13303099014"
-    # num = "+15409052428"
+    num = "+15409052428"
     link_to_page = "https://something"
     message = "Everyone has filled up their shopping carts! Request your money here: " + link_to_page
     client.messages.create(to=num, 
