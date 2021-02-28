@@ -111,14 +111,13 @@ class List extends Component {
   }
 
   confirm() {
-    /*
     let itemsToDb = [];
     this.state.items.forEach(item => {
       let newItem = {};
       newItem.id = item.id;
       newItem.name = item.name;
       newItem.price = item.price;
-      newItem.percentage = item.slider * item.percentage;
+      newItem.percentage = item.slider * item.percentage / 100;
       itemsToDb.push(newItem);
     });
     const user_token = JSON.parse(window.localStorage.getItem("token"));
@@ -133,8 +132,7 @@ class List extends Component {
       console.log(res.data);
     })
     .catch(err => console.log(err));
-    */
-    this.setState({isOpen: true});
+    // this.setState({isOpen: true});
   }
 
   closeModal() {    
