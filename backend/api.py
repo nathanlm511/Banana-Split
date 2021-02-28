@@ -116,7 +116,6 @@ def host_login():
                         '''
 
     response = json.dumps(return_data_dict)
-
     return response
 
 @app.route('/friend_login', methods=['POST'])
