@@ -6,11 +6,12 @@ import pymongo
 from flask_cors import CORS, cross_origin
 import numpy as np
 from bson.json_util import dumps
-from twilio.rest import Client # sms
+from twilio.rest import Client as Cl # sms
 from find_corners import get_corner_points # receipts
 from parse_receipt import parse_receipt
 from preprocess import process_image_for_ocr
 from orient_receipt import orient_receipt
+
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -24,7 +25,7 @@ client = pymongo.MongoClient("mongodb+srv://jusjus:jusjus@cluster0.ksh52.mongodb
 db = client.db
 sessions = db['sessions']
 
-twilio_client = Client("AC588038219fa0772239a1af667dabd171", "771d5391ee31d506da061a13a39f2721")
+twilio_client = Cl("AC588038219fa0772239a1af667dabd171", "771d5391ee31d506da061a13a39f2721")
 
 
 @app.route('/', methods=['GET'])
@@ -74,19 +75,28 @@ def post_image():
 # When host starts session. Can be after taking and processing picture of receipt
 @app.route('/host_login', methods=['POST'])
 def host_login():
-    
+
     venmo_user = request.json["username"]
     venmo_pass = request.json["password"]
-    try:
-        access_token = Client.get_access_token(username='Sam-Schoedel', password='VTHACKS8KNITTING')
-    except:
-        print("username or password incorrect")
-        response = app.response_class(
-            response="username or password incorrect",
-            mimetype='application/json',
-            status=413
-        )
-        return response
+    # Get your access token. You will need to complete the 2FA process
+    # try:
+    #     access_token = Client.get_access_token(username='Sam-Schoedel',
+    #                                     password='VTHACKS8KNITTING')
+    # except:
+    #     print("username or password incorrect")
+
+        
+    access_token = Client.get_access_token(username=venmo_user, password=venmo_pass)
+    # try:
+    #     access_token = Client.get_access_token(username=venmo_user, password=venmo_pass)
+    # except:
+    #     print("username or password incorrect")
+    #     response = app.response_class(
+    #         response="username or password incorrect",
+    #         mimetype='application/json',
+    #         status=413
+    #     )
+    #     return response
         
     # Make venmo User object for host
     host_venmo = Client(access_token=access_token)
@@ -97,7 +107,6 @@ def host_login():
                         "last_name": host.last_name, "display_name": host.display_name, "phone": host.phone,
                         "profile_picture_url": host.profile_picture_url, "about": host.about, 
                         "date_joined": host.date_joined, "is_group": host.is_group, "is_active": host.is_active}
-    '''
     
     # Return jsonified data
     return_data_dict = {"id": "nathan1234", "username": "nathan_username", "first_name": "first",
@@ -105,11 +114,29 @@ def host_login():
                         "profile_picture_url": "google.com", "about": "about me", 
                         "date_joined": "date_joined", "is_group": True, "is_active": True}
                         
-                        '''
 
     response = json.dumps(return_data_dict)
-'''
+
     return response
+    
+@app.route('/oauth-authorized')
+def oauth_authorized():
+    AUTHORIZATION_CODE = request.args.get('code')
+    data = {
+        "client_id":CONSUMER_ID,
+        "client_secret":CONSUMER_SECRET,
+        "code":AUTHORIZATION_CODE
+        }
+    url = "https://api.venmo.com/v1/oauth/access_token"
+    response = requests.post(url, data)
+    response_dict = response.json()
+    access_token = response_dict.get('access_token')
+    user = response_dict.get('user')
+
+    session['venmo_token'] = access_token
+    session['venmo_username'] = user['username']
+
+    return 'You were signed in as %s' % user['username']
 
 @app.route('/friend_login', methods=['POST'])
 def friend_login():
