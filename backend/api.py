@@ -75,43 +75,13 @@ def post_image():
 # When host starts session. Can be after taking and processing picture of receipt
 @app.route('/host_login', methods=['POST'])
 def host_login():
-<<<<<<< HEAD
 
     venmo_user = request.json["username"]
     venmo_pass = request.json["password"]
-    # Get your access token. You will need to complete the 2FA process
-    # try:
-    #     access_token = Client.get_access_token(username='Sam-Schoedel',
-    #                                     password='VTHACKS8KNITTING')
-    # except:
-    #     print("username or password incorrect")
 
         
-    access_token = Client.get_access_token(username=venmo_user, password=venmo_pass)
-    # try:
-    #     access_token = Client.get_access_token(username=venmo_user, password=venmo_pass)
-    # except:
-    #     print("username or password incorrect")
-    #     response = app.response_class(
-    #         response="username or password incorrect",
-    #         mimetype='application/json',
-    #         status=413
-    #     )
-    #     return response
-=======
-    if request.method == 'OPTIONS':
-        print("hello options")
-        response = app.response_class(
-            response="working fine",
-            status=200
-        )        
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
-
-    venmo_user = request.json["username"]
-    venmo_pass = request.json["password"]
     try:
-        access_token = Client.get_access_token(username='Sam-Schoedel', password='VTHACKS8KNITTING')
+        access_token = Client.get_access_token(username=venmo_user, password=venmo_pass)
     except:
         print("username or password incorrect")
         response = app.response_class(
@@ -119,8 +89,7 @@ def host_login():
             mimetype='application/json',
             status=413
         )
-        return "incorrect"
->>>>>>> 87c9dd8ecef7f4551c65dddb5e05538974e085a7
+        return response
         
     # Make venmo User object for host
     host_venmo = Client(access_token=access_token)
@@ -131,27 +100,16 @@ def host_login():
                         "last_name": host.last_name, "display_name": host.display_name, "phone": host.phone,
                         "profile_picture_url": host.profile_picture_url, "about": host.about, 
                         "date_joined": host.date_joined, "is_group": host.is_group, "is_active": host.is_active}
-<<<<<<< HEAD
-=======
-
-    '''  
->>>>>>> 87c9dd8ecef7f4551c65dddb5e05538974e085a7
     
     # Return jsonified data
     return_data_dict = {"id": "nathan1234", "username": "nathan_username", "first_name": "first",
                         "last_name": "last", "display_name": "First last", "phone": "+15409052428",
                         "profile_picture_url": "google.com", "about": "about me", 
                         "date_joined": "date_joined", "is_group": True, "is_active": True}
-<<<<<<< HEAD
                         
 
     response = json.dumps(return_data_dict)
 
-=======
-                        '''
-
-    response = json.dumps(return_data_dict)
->>>>>>> 87c9dd8ecef7f4551c65dddb5e05538974e085a7
     return response
     
 @app.route('/oauth-authorized')
