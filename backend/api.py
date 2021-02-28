@@ -126,7 +126,7 @@ def create_connection():
 
     session_json = request.get_json()
     item_id = 0
-    session_id = create_session_on_db(session_json["name"], session_json["name"])
+    session_id = create_session_on_db(session_json["host"], session_json["name"])
     #username, number of users, name
 
     for item in session_json['items']['all food']:
@@ -145,9 +145,13 @@ def add_item_to_user():
 
 @app.route('/add_user', methods=['POST'])
 def add_user_to_session():
-    
     session_json = request.get_json()
     add_user_to_session(session_json["id"], session_json["username"])
+
+    for item in session_json["items"]:
+        update_connection_user_item(session_json["session_id"], session_json["name"], item["name"], item["percentage"])
+    
+
 
 def update_connection_user_item(session_id, user, item, percentage):
     sessions.update_one({"id": session_id, "users": { "$elemMatch": { "name":user}}}, {"$push": {"users.$.bought_items": {"Name": item, "percent": percentage}}})
@@ -161,7 +165,7 @@ def add_item_to_session(session_id, name, price, id):
     sessions.update_one({"id": session_id}, {"$push": {"items": {"id": id, "name": name, "price": price}}}) 
 
 def add_user_to_session(session_id, name):
-    sessions.update_one({"id": session_id}, {"$push": {"users": {"name": name, "bought_items": []}}})
+    sessions.replace_one({"id": session_id}, {"$push": {"users": {"name": name, "bought_items": []}}}, upsert=True)
 
 def add_item_to_user(session_id, user, item):
     return
