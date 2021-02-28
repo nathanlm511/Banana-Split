@@ -191,9 +191,11 @@ def request_money():
     for username in names_dict:
         request_amount = names_dict[username]
         user = venmo.user.get_user_by_username(username)
-        venmo.payment.request_money(request_amount, "Requested by Banana Split App!", target_user=user)
-        print(f"Requested {request_amount} from {username}")
-    return
+        if user is not None:
+            venmo.payment.request_money(request_amount, "Requested by Banana Split App!", target_user=user)
+            print(f"Requested {request_amount} from {username}")
+
+    return "success"
 
 @app.route('/get_session', methods=['POST'])
 def get_session_data():
