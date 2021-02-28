@@ -42,7 +42,7 @@ class Camera extends Component {
   }
 
   updateFileName() {
-    if (this.fileInput.current) {
+    if (this.fileInput.current && this.fileInput.current.files && this.fileInput.current.files[0]) {
       this.setState({filename: this.fileInput.current.files[0].name});      
     }
   }
@@ -50,15 +50,23 @@ class Camera extends Component {
   render() {
     return (
       <div className="camera">
+        <div className="camera-title">
+          Take a picture of the receipt!
+        </div>
+        <div className="photo-container">
+          <div className="receipt"/>
+          <div className="camera-pic"/>
+          <div className="bananya"/>
+        </div>
         <div className="card">
           <div className="instructions">
-            Take or choose a picture of a reciept and let our AI scan the image for all of your items!
+            Let the AI do all the work for you! Using techniques such as feature extracting, pruning, homography transformations, and OCR, we'll read the reciept so you don't have to!
           </div>
           <form onSubmit={this.handleSubmit} className="camera-form">   
-          <div class='file-input'>
+          <div className='file-input'>
             <input id="photo-id" type="file" accept="image/*" capture="camera" ref={this.fileInput} className="photo-input" onChange={this.updateFileName}></input>
             <span className='button'>Choose</span>
-            <label className='label' for="photo-id">{this.state.filename ? this.state.filename : "No file chosen"}</label>
+            <label className='label'>{this.state.filename ? this.state.filename : "No file chosen"}</label>
           </div>     
           
           <br></br>
