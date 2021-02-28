@@ -7,6 +7,7 @@ def parse_receipt(processed_image):
 
     food_categories = ["FROZEN/DAIRY", "GROCERY", "MEAT", "DELI", "PRODUCE"]
     keywords = ["You saved", "Tax Paid", "BALANCE DUE", "FROZEN/DAIRY", "GROCERY", "MEAT", "DELI", "PRODUCE"]
+    processed_image = cv2.imread('images/receipt_test3.jpg',0)
 
     ret = pytesseract.image_to_string(processed_image, output_type=pytesseract.Output.STRING)
 
@@ -175,9 +176,9 @@ def parse_receipt(processed_image):
     return {"balance due": balance_due, "all food": foods}
 
 
-frame = cv2.imread('images/receipt_test3.jpg',0) # Preprocessed image
+# frame = cv2.imread('images/receipt_test3.jpg',0) # Preprocessed image
 
-receipt = parse_receipt(frame)
+# receipt = parse_receipt(frame)
 
 # print("\n\nFood: price\n")
 # total_read_cost = 0

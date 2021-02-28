@@ -290,3 +290,25 @@ def cursor_to_json(cursor):
 app.run()
 
         
+        
+        
+#         ## Inspiration
+# Have you ever been part of a group of people, say your roommates, purchasing groceries for the week? If one person pays for the food, it can be inefficient and imprecise for everyone involved to tally up what they owe to whoever paid. This is where Banana Split can help!
+
+# ## What it does
+# Instead of going through the receipt person by person, item by item, to calculate each person's contribution, whoever paid - we'll call them the host - can simply take a picture of their receipt and let Banana Split take care of the processing. Our app applies a load of computer vision algorithms to process, transform, and perform OCR on the receipt, parsing each item purchased and its associated price (and grocery store food group!). The host can then send a link to whoever needs to pay up. Each person then individually logs in with their Venmo account and is presented with a list of items to select from. They can choose to pay for as much of a particular item as they think they'll use. Once everyone has completed their shopping carts, the host receives a confirmation text and, upon confirmation, Banana Split uses Venmo to send a request to each person for the amount they owe.
+
+
+# ## How we built it
+# **Front end**
+# **Database**
+# **Receipt Parsing**
+
+
+# ## Challenges we ran into
+
+# ## Accomplishments that we're proud of
+
+# ## What we learned
+
+# ## What's next for Banana Split
