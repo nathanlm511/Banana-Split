@@ -3,26 +3,36 @@ import json
 from venmo_api import Client
 import cv2
 import pymongo
-import bson.json_util
-
-app = flask.Flask(__name__)
-app.config["DEBUG"] = True
-db = client.db
-sessions = db['sessions']
 from flask_cors import CORS, cross_origin
+import numpy as np
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
+app.config["DEBUG"] = True
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Venmo Users
 host = None
 friends = []
 client = pymongo.MongoClient("mongodb+srv://jusjus:jusjus@cluster0.ksh52.mongodb.net/sessions?retryWrites=true&w=majority")
+db = client.db
+sessions = db['sessions']
 
 @app.route('/', methods=['GET'])
 def home():
     return "<h1>Distant Reading Archive</h1><p>This site is a prototype API for distant reading of science fiction novels.</p>"
+
+@app.route('/test_image', methods=['POST'])
+def post_image():
+    """ post image and return the response """
+    filestr = request.files['file']
+    npimg = np.fromfile(filestr, np.uint8)
+    img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+    cv2.imshow('image', img)
+    cv2.waitKey(0)
+
+    return "nice c"
+
 
 # When host starts session. Can be after taking and processing picture of receipt
 @app.route('/host_login', methods=['POST'])
@@ -99,33 +109,19 @@ def friend_login():
 def host_confirm_request():
     pass
 
-#app.run()
+app.run()
 
-def create_connection(hostname, items, num_users, name):\
-    item_id = 0
-    uuid = create_session_on_db(hostname, num_users, name)
-    for (item in items):
-        #??? how to translate "items"
-        add_item_to_session(uuid, item[0], item[1], item_id)
-        id += 1
-    return cursor_to_json(sessions.find({"uuid": uuid}))
-
-def create_session_on_db(username, num_users, name):
+def create_session_on_db(username, num_users):
     uuid = sessions.count() + 1
-    sessions.insert_one([{"uuid": uuid, "name:" name, "num_users":num_users, "host": username, "items": [], "users": []}])
+    sessions.insert_one([{"uuid": uuid, "num_users":num_users, "num_items":0, "host": username, "items": [], "users": []}])
     return uuid
 
-def add_item_to_session(session_id, name, price, id):
+def add_item_to_session(session_id, name, price):
     #??? IDS
-    sessions.update({"uuid": session_id}, {"$push": {"items": {"id": id "Name": name, "Price": price}}}) 
+    sessions.update({"uuid": session_id}, {"$push": {"items": {"Name": name, "Price": price}}}) 
 
 def add_user_to_session(session_id, name):
     sessions.update({"uuid": session_id}, {"$push": {"users": {"Name": name, "bought_items": []}}})
     sessions.update({"uuid": session_id}, { "$inc": {"num_users": 1}})
-
-def add_item_to_user(hostname)
-
-def cursor_to_json(cursor):
-    return dumps(list(cursor), indent = 2)
 
         
